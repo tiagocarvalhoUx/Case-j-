@@ -4,17 +4,15 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { Loader2, ArrowRight } from "lucide-react";
 import { createWedding, type OnboardingState } from "./actions";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { LuxeButton, LuxeInput, LuxeLabel } from "@/components/luxe/ui";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" size="lg" className="w-full" disabled={pending}>
+    <LuxeButton type="submit" size="lg" className="w-full" disabled={pending}>
       {pending && <Loader2 size={18} className="animate-spin" />}
-      Criar meu casamento <ArrowRight size={18} />
-    </Button>
+      Criar meu casamento <ArrowRight size={16} strokeWidth={1.5} />
+    </LuxeButton>
   );
 }
 
@@ -25,19 +23,19 @@ export function OnboardingForm({ defaultCouple }: { defaultCouple: string }) {
   );
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-5">
       {state.error && (
         <div
           role="alert"
-          className="rounded-xl border border-danger-500/20 bg-danger-50 px-4 py-3 text-sm text-danger-600"
+          className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-300"
         >
           {state.error}
         </div>
       )}
 
       <div>
-        <Label htmlFor="couple">Nomes do casal</Label>
-        <Input
+        <LuxeLabel htmlFor="couple">Nomes do casal</LuxeLabel>
+        <LuxeInput
           id="couple"
           name="couple"
           defaultValue={defaultCouple}
@@ -48,16 +46,16 @@ export function OnboardingForm({ defaultCouple }: { defaultCouple: string }) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <Label htmlFor="date">Data do casamento</Label>
-          <Input id="date" name="date" type="date" />
+          <LuxeLabel htmlFor="date">Data do casamento</LuxeLabel>
+          <LuxeInput id="date" name="date" type="date" className="[color-scheme:dark]" />
         </div>
         <div>
-          <Label htmlFor="city">Cidade</Label>
-          <Input id="city" name="city" placeholder="São Paulo, SP" />
+          <LuxeLabel htmlFor="city">Cidade</LuxeLabel>
+          <LuxeInput id="city" name="city" placeholder="São Paulo, SP" />
         </div>
       </div>
 
-      <p className="text-xs text-ink-400">
+      <p className="text-[11px] text-luxe-muted/70">
         Não se preocupe: você pode alterar tudo isso depois no editor do site.
       </p>
 

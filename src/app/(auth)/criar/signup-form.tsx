@@ -5,9 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, MailCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  LuxeButton,
+  LuxeInput,
+  LuxeLabel,
+  LuxeTitle,
+} from "@/components/luxe/ui";
 
 export function SignupForm() {
   const router = useRouter();
@@ -54,14 +57,12 @@ export function SignupForm() {
       return;
     }
 
-    // Sessão já criada (confirmação de e-mail desativada) → vai ao painel.
     if (data.session) {
       router.push("/painel");
       router.refresh();
       return;
     }
 
-    // Caso contrário, precisa confirmar o e-mail.
     setConfirmSent(true);
     setLoading(false);
   }
@@ -69,17 +70,18 @@ export function SignupForm() {
   if (confirmSent) {
     return (
       <div className="text-center">
-        <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 text-primary-600">
-          <MailCheck size={26} />
+        <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full border border-luxe-gold/30 text-luxe-gold">
+          <MailCheck size={24} strokeWidth={1.5} />
         </span>
-        <h1 className="mt-5 text-2xl font-semibold text-navy-900">
-          Confirme seu e-mail
-        </h1>
-        <p className="mt-2 text-sm text-ink-500">
+        <LuxeTitle className="mt-5 text-2xl">Confirme seu e-mail</LuxeTitle>
+        <p className="mt-2 text-sm text-luxe-muted">
           Enviamos um link de confirmação para o seu e-mail. Clique nele para
           ativar sua conta e começar a planejar.
         </p>
-        <Link href="/entrar" className="mt-6 inline-block text-sm font-semibold text-primary-600 hover:underline">
+        <Link
+          href="/entrar"
+          className="mt-6 inline-block text-sm text-luxe-gold hover:text-luxe-gold-soft"
+        >
           Voltar para entrar
         </Link>
       </div>
@@ -88,26 +90,24 @@ export function SignupForm() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-900">
-        Crie seu site de casamento
-      </h1>
-      <p className="mt-2 text-sm text-ink-500">
+      <LuxeTitle className="text-3xl">Crie seu site de casamento</LuxeTitle>
+      <p className="mt-2 text-sm text-luxe-muted">
         É grátis para começar. Leva menos de um minuto.
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+      <form onSubmit={handleSubmit} className="mt-8 space-y-5">
         {error && (
           <div
             role="alert"
-            className="rounded-xl border border-danger-500/20 bg-danger-50 px-4 py-3 text-sm text-danger-600"
+            className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-300"
           >
             {error}
           </div>
         )}
 
         <div>
-          <Label htmlFor="couple">Nomes do casal</Label>
-          <Input
+          <LuxeLabel htmlFor="couple">Nomes do casal</LuxeLabel>
+          <LuxeInput
             id="couple"
             name="couple"
             placeholder="Marina & Rafael"
@@ -117,8 +117,8 @@ export function SignupForm() {
         </div>
 
         <div>
-          <Label htmlFor="email">E-mail</Label>
-          <Input
+          <LuxeLabel htmlFor="email">E-mail</LuxeLabel>
+          <LuxeInput
             id="email"
             name="email"
             type="email"
@@ -129,8 +129,8 @@ export function SignupForm() {
         </div>
 
         <div>
-          <Label htmlFor="password">Senha</Label>
-          <Input
+          <LuxeLabel htmlFor="password">Senha</LuxeLabel>
+          <LuxeInput
             id="password"
             name="password"
             type="password"
@@ -140,20 +140,20 @@ export function SignupForm() {
           />
         </div>
 
-        <Button type="submit" size="lg" className="w-full" disabled={loading}>
+        <LuxeButton type="submit" size="lg" className="w-full" disabled={loading}>
           {loading && <Loader2 size={18} className="animate-spin" />}
           Criar minha conta
-        </Button>
+        </LuxeButton>
 
-        <p className="text-center text-xs text-ink-400">
+        <p className="text-center text-[11px] text-luxe-muted/70">
           Ao criar a conta, você concorda com os Termos de Uso e a Política de
           Privacidade (LGPD).
         </p>
       </form>
 
-      <p className="mt-6 text-center text-sm text-ink-500">
+      <p className="mt-6 text-center text-sm text-luxe-muted">
         Já tem conta?{" "}
-        <Link href="/entrar" className="font-semibold text-primary-600 hover:underline">
+        <Link href="/entrar" className="text-luxe-gold hover:text-luxe-gold-soft">
           Entrar
         </Link>
       </p>

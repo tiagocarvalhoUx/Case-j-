@@ -15,17 +15,19 @@ export default async function SitePage() {
   if (!wedding) redirect("/onboarding");
 
   return (
-    <Container className="py-10">
+    <Container className="py-12">
       <Link
         href="/painel"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-navy-900"
+        className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-luxe-muted transition-colors hover:text-luxe-gold"
       >
-        <ArrowLeft size={15} /> Voltar ao painel
+        <ArrowLeft size={14} strokeWidth={1.5} /> Voltar ao painel
       </Link>
 
-      <div className="mt-4 mb-8">
-        <h1 className="text-3xl font-semibold text-navy-900">Site do casamento</h1>
-        <p className="mt-1 text-ink-500">
+      <div className="mt-5 mb-9">
+        <h1 className="font-serif-luxe text-4xl font-light text-luxe-cream">
+          Site do casamento
+        </h1>
+        <p className="mt-1 text-luxe-muted">
           Personalize as informações e a aparência do site que seus convidados
           vão ver.
         </p>

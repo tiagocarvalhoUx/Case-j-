@@ -10,18 +10,17 @@ import {
   type GiftState,
 } from "./actions";
 import type { Gift as GiftRow } from "@/lib/supabase/types";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import {
+  LuxeCard,
+  LuxeButton,
+  LuxeInput,
+  LuxeTextarea,
+  LuxeLabel,
+  LuxeBadge,
+} from "@/components/luxe/ui";
 import { cn } from "@/lib/utils";
 
-const BRL = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-});
+const BRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 const suggestions = [
   { title: "Cota de lua de mel", price: "150", type: "quota", category: "Lua de mel" },
@@ -33,10 +32,10 @@ const suggestions = [
 function AddButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
-      {pending ? <Loader2 size={18} className="animate-spin" /> : <Plus size={18} />}
+    <LuxeButton type="submit" disabled={pending}>
+      {pending ? <Loader2 size={18} className="animate-spin" /> : <Plus size={16} strokeWidth={1.5} />}
       Adicionar presente
-    </Button>
+    </LuxeButton>
   );
 }
 
@@ -58,25 +57,24 @@ export function GiftsManager({ gifts }: { gifts: GiftRow[] }) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-      {/* Formulário de adição */}
+      {/* Formulário */}
       <form action={formAction}>
-        <Card className="space-y-5">
-          <h2 className="text-lg font-semibold text-navy-900">Novo presente</h2>
+        <LuxeCard className="space-y-5">
+          <h2 className="font-serif-luxe text-xl text-luxe-cream">Novo presente</h2>
 
           {state.success && (
-            <div className="rounded-xl border border-success-500/20 bg-success-50 px-4 py-3 text-sm text-success-600">
-              Presente adicionado! 🎁
+            <div className="rounded-xl border border-luxe-gold/25 bg-luxe-gold/10 px-4 py-3 text-sm text-luxe-gold">
+              Presente adicionado!
             </div>
           )}
           {state.error && (
-            <div className="rounded-xl border border-danger-500/20 bg-danger-50 px-4 py-3 text-sm text-danger-600">
+            <div className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-300">
               {state.error}
             </div>
           )}
 
-          {/* Sugestões */}
           <div>
-            <p className="mb-2 text-xs font-medium text-ink-500">Sugestões rápidas</p>
+            <p className="mb-2 text-[11px] uppercase tracking-[0.2em] text-luxe-muted">Sugestões rápidas</p>
             <div className="flex flex-wrap gap-2">
               {suggestions.map((s) => (
                 <button
@@ -88,7 +86,7 @@ export function GiftsManager({ gifts }: { gifts: GiftRow[] }) {
                     setType(s.type as "fixed" | "quota");
                     setCategory(s.category);
                   }}
-                  className="rounded-full border border-ink-200 px-3 py-1.5 text-xs font-medium text-ink-600 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700"
+                  className="rounded-full border border-white/10 px-3 py-1.5 text-[11px] text-luxe-muted transition-colors hover:border-luxe-gold/50 hover:text-luxe-gold"
                 >
                   {s.title}
                 </button>
@@ -97,19 +95,12 @@ export function GiftsManager({ gifts }: { gifts: GiftRow[] }) {
           </div>
 
           <div>
-            <Label htmlFor="title">Nome do presente</Label>
-            <Input
-              id="title"
-              name="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Cota de lua de mel"
-              required
-            />
+            <LuxeLabel htmlFor="title">Nome do presente</LuxeLabel>
+            <LuxeInput id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Cota de lua de mel" required />
           </div>
 
           <div>
-            <Label>Tipo</Label>
+            <LuxeLabel>Tipo</LuxeLabel>
             <input type="hidden" name="type" value={type} />
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -121,16 +112,12 @@ export function GiftsManager({ gifts }: { gifts: GiftRow[] }) {
                   type="button"
                   onClick={() => setType(t.key as "fixed" | "quota")}
                   className={cn(
-                    "rounded-xl border-2 p-3 text-left transition-colors",
-                    type === t.key
-                      ? "border-primary-500 bg-primary-50/50"
-                      : "border-ink-200 hover:border-ink-300"
+                    "rounded-xl border p-3 text-left transition-colors",
+                    type === t.key ? "border-luxe-gold bg-luxe-gold/5" : "border-white/10 hover:border-white/25"
                   )}
                 >
-                  <span className="block text-sm font-semibold text-navy-900">
-                    {t.label}
-                  </span>
-                  <span className="block text-xs text-ink-500">{t.desc}</span>
+                  <span className="block text-sm text-luxe-cream">{t.label}</span>
+                  <span className="block text-[11px] text-luxe-muted">{t.desc}</span>
                 </button>
               ))}
             </div>
@@ -138,64 +125,41 @@ export function GiftsManager({ gifts }: { gifts: GiftRow[] }) {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <Label htmlFor="price">
-                Valor {type === "quota" ? "por cota" : ""} (R$)
-              </Label>
-              <Input
-                id="price"
-                name="price"
-                inputMode="decimal"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="150,00"
-                required
-              />
+              <LuxeLabel htmlFor="price">Valor {type === "quota" ? "por cota" : ""} (R$)</LuxeLabel>
+              <LuxeInput id="price" name="price" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="150,00" required />
             </div>
             <div>
-              <Label htmlFor="category">Categoria</Label>
-              <Input
-                id="category"
-                name="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder="Lua de mel"
-              />
+              <LuxeLabel htmlFor="category">Categoria</LuxeLabel>
+              <LuxeInput id="category" name="category" value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Lua de mel" />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="description">Descrição (opcional)</Label>
-            <Textarea
-              id="description"
-              name="description"
-              placeholder="Ajude o casal a realizar esse sonho..."
-              className="min-h-20"
-            />
+            <LuxeLabel htmlFor="description">Descrição (opcional)</LuxeLabel>
+            <LuxeTextarea id="description" name="description" placeholder="Ajude o casal a realizar esse sonho..." className="min-h-20" />
           </div>
 
           <div>
-            <Label htmlFor="image_url">Foto (URL, opcional)</Label>
-            <Input id="image_url" name="image_url" type="url" placeholder="https://..." />
+            <LuxeLabel htmlFor="image_url">Foto (URL, opcional)</LuxeLabel>
+            <LuxeInput id="image_url" name="image_url" type="url" placeholder="https://..." />
           </div>
 
           <AddButton />
-        </Card>
+        </LuxeCard>
       </form>
 
-      {/* Lista de presentes */}
+      {/* Lista */}
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-navy-900">
-            Sua lista ({gifts.length})
-          </h2>
+          <h2 className="font-serif-luxe text-xl text-luxe-cream">Sua lista ({gifts.length})</h2>
         </div>
 
         {gifts.length === 0 ? (
-          <Card className="border-dashed py-12 text-center text-ink-500">
-            <Gift size={28} className="mx-auto text-ink-300" />
+          <LuxeCard className="py-12 text-center text-luxe-muted">
+            <Gift size={28} strokeWidth={1.25} className="mx-auto text-luxe-muted/50" />
             <p className="mt-3">Nenhum presente ainda.</p>
             <p className="text-sm">Adicione o primeiro usando o formulário ao lado.</p>
-          </Card>
+          </LuxeCard>
         ) : (
           <div className="space-y-3">
             {gifts.map((g) => {
@@ -205,23 +169,17 @@ export function GiftsManager({ gifts }: { gifts: GiftRow[] }) {
                   ? PiggyBank
                   : Gift;
               return (
-                <Card
-                  key={g.id}
-                  className={cn(
-                    "flex items-center gap-4 p-4",
-                    !g.active && "opacity-60"
-                  )}
-                >
-                  <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
-                    <Icon size={20} />
+                <LuxeCard key={g.id} className={cn("flex items-center gap-4 p-4", !g.active && "opacity-50")}>
+                  <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-luxe-gold/25 text-luxe-gold">
+                    <Icon size={19} strokeWidth={1.5} />
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="truncate font-semibold text-navy-900">{g.title}</p>
-                      {g.type === "quota" && <Badge variant="gold">Cota</Badge>}
-                      {!g.active && <Badge variant="neutral">Oculto</Badge>}
+                      <p className="truncate text-luxe-cream">{g.title}</p>
+                      {g.type === "quota" && <LuxeBadge variant="gold">Cota</LuxeBadge>}
+                      {!g.active && <LuxeBadge variant="muted">Oculto</LuxeBadge>}
                     </div>
-                    <p className="text-sm text-ink-500">
+                    <p className="text-sm text-luxe-muted">
                       {BRL.format(Number(g.price))}
                       {g.category ? ` · ${g.category}` : ""}
                     </p>
@@ -230,26 +188,18 @@ export function GiftsManager({ gifts }: { gifts: GiftRow[] }) {
                     <form action={toggleGiftActive}>
                       <input type="hidden" name="id" value={g.id} />
                       <input type="hidden" name="active" value={(!g.active).toString()} />
-                      <button
-                        type="submit"
-                        title={g.active ? "Ocultar do site" : "Mostrar no site"}
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-ink-500 hover:bg-ink-100 hover:text-navy-900"
-                      >
-                        {g.active ? <Eye size={17} /> : <EyeOff size={17} />}
+                      <button type="submit" title={g.active ? "Ocultar do site" : "Mostrar no site"} className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-luxe-muted hover:bg-white/5 hover:text-luxe-gold">
+                        {g.active ? <Eye size={17} strokeWidth={1.5} /> : <EyeOff size={17} strokeWidth={1.5} />}
                       </button>
                     </form>
                     <form action={deleteGift}>
                       <input type="hidden" name="id" value={g.id} />
-                      <button
-                        type="submit"
-                        title="Excluir"
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-ink-500 hover:bg-danger-50 hover:text-danger-600"
-                      >
-                        <Trash2 size={17} />
+                      <button type="submit" title="Excluir" className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-luxe-muted hover:bg-red-500/10 hover:text-red-400">
+                        <Trash2 size={17} strokeWidth={1.5} />
                       </button>
                     </form>
                   </div>
-                </Card>
+                </LuxeCard>
               );
             })}
           </div>

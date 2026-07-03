@@ -5,9 +5,12 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  LuxeButton,
+  LuxeInput,
+  LuxeLabel,
+  LuxeTitle,
+} from "@/components/luxe/ui";
 
 export function LoginForm() {
   const router = useRouter();
@@ -27,10 +30,7 @@ export function LoginForm() {
     const password = String(form.get("password"));
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
       setError(
@@ -48,24 +48,24 @@ export function LoginForm() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-900">Bem-vindos de volta</h1>
-      <p className="mt-2 text-sm text-ink-500">
+      <LuxeTitle className="text-3xl">Bem-vindos de volta</LuxeTitle>
+      <p className="mt-2 text-sm text-luxe-muted">
         Entre para continuar planejando seu casamento.
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+      <form onSubmit={handleSubmit} className="mt-8 space-y-5">
         {error && (
           <div
             role="alert"
-            className="rounded-xl border border-danger-500/20 bg-danger-50 px-4 py-3 text-sm text-danger-600"
+            className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-300"
           >
             {error}
           </div>
         )}
 
         <div>
-          <Label htmlFor="email">E-mail</Label>
-          <Input
+          <LuxeLabel htmlFor="email">E-mail</LuxeLabel>
+          <LuxeInput
             id="email"
             name="email"
             type="email"
@@ -76,18 +76,18 @@ export function LoginForm() {
         </div>
 
         <div>
-          <div className="mb-1.5 flex items-center justify-between">
-            <Label htmlFor="password" className="mb-0">
+          <div className="mb-2 flex items-center justify-between">
+            <LuxeLabel htmlFor="password" className="mb-0">
               Senha
-            </Label>
+            </LuxeLabel>
             <Link
               href="/recuperar-senha"
-              className="text-xs font-medium text-primary-600 hover:underline"
+              className="text-[11px] uppercase tracking-[0.15em] text-luxe-gold/80 hover:text-luxe-gold"
             >
               Esqueci a senha
             </Link>
           </div>
-          <Input
+          <LuxeInput
             id="password"
             name="password"
             type="password"
@@ -97,16 +97,16 @@ export function LoginForm() {
           />
         </div>
 
-        <Button type="submit" size="lg" className="w-full" disabled={loading}>
+        <LuxeButton type="submit" size="lg" className="w-full" disabled={loading}>
           {loading && <Loader2 size={18} className="animate-spin" />}
           Entrar
-        </Button>
+        </LuxeButton>
       </form>
 
-      <p className="mt-6 text-center text-sm text-ink-500">
+      <p className="mt-8 text-center text-sm text-luxe-muted">
         Ainda não tem conta?{" "}
-        <Link href="/criar" className="font-semibold text-primary-600 hover:underline">
-          Criar meu site grátis
+        <Link href="/criar" className="text-luxe-gold hover:text-luxe-gold-soft">
+          Criar meu site
         </Link>
       </p>
     </div>

@@ -3,15 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarDays, MapPin, Gift, Plane, Heart, PiggyBank } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { getTheme } from "@/lib/themes";
-import { LogoMark } from "@/components/ui/logo";
+import { LuxeOrnament } from "@/components/luxe/ui";
 import { cn } from "@/lib/utils";
 import type { Gift as GiftRow, Wedding } from "@/lib/supabase/types";
 
-const BRL = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-});
+/* eslint-disable @next/next/no-img-element */
+
+const BRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 function formatDate(date: string | null) {
   if (!date) return null;
@@ -32,11 +30,7 @@ function daysUntil(date: string | null) {
 
 async function getWedding(slug: string): Promise<Wedding | null> {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("weddings")
-    .select("*")
-    .eq("slug", slug)
-    .maybeSingle();
+  const { data } = await supabase.from("weddings").select("*").eq("slug", slug).maybeSingle();
   return data ?? null;
 }
 
@@ -80,54 +74,41 @@ export default async function PublicWeddingPage({
     .order("sort_order", { ascending: true });
   const gifts = (giftsData ?? []) as GiftRow[];
 
-  const theme = getTheme(wedding.theme);
   const dateLabel = formatDate(wedding.wedding_date);
   const countdown = daysUntil(wedding.wedding_date);
+  const cover = wedding.cover_image_url || "/background/hero-luxe.jpg";
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-luxe-black text-luxe-cream">
       {/* HERO */}
-      <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden text-center">
-        {wedding.cover_image_url ? (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={wedding.cover_image_url}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-navy-950/55" />
-          </>
-        ) : (
-          <div className={cn("absolute inset-0", theme.hero)} />
-        )}
+      <section className="relative flex min-h-[80vh] items-center justify-center overflow-hidden text-center">
+        <img src={cover} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-luxe-black/70 via-luxe-black/60 to-luxe-black" />
 
-        <div className="relative px-6 py-20 text-white">
-          <p className="font-display text-sm uppercase tracking-[0.4em] text-white/80">
+        <div className="relative px-6 py-24">
+          <p className="font-serif-luxe text-xs uppercase tracking-[0.5em] text-luxe-gold">
             Nosso casamento
           </p>
-          <h1 className="mt-3 font-script text-6xl leading-tight tracking-normal sm:text-7xl">
+          <h1 className="mt-6 font-script text-7xl leading-none text-luxe-gold sm:text-8xl">
             {wedding.couple_names}
           </h1>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-white/90">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-luxe-cream/85">
             {dateLabel && (
-              <span className="inline-flex items-center gap-2">
-                <CalendarDays size={18} /> {dateLabel}
+              <span className="inline-flex items-center gap-2 font-serif-luxe tracking-wide">
+                <CalendarDays size={17} strokeWidth={1.5} /> {dateLabel}
               </span>
             )}
             {(wedding.city || wedding.venue) && (
-              <span className="inline-flex items-center gap-2">
-                <MapPin size={18} /> {wedding.venue || wedding.city}
+              <span className="inline-flex items-center gap-2 font-serif-luxe tracking-wide">
+                <MapPin size={17} strokeWidth={1.5} /> {wedding.venue || wedding.city}
               </span>
             )}
           </div>
           {countdown !== null && countdown >= 0 && (
-            <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-white/15 px-5 py-2 backdrop-blur-sm">
-              <Heart size={16} fill="currentColor" />
-              <span className="font-semibold">
-                {countdown === 0
-                  ? "É hoje! 🎉"
-                  : `Faltam ${countdown} dias para o grande dia`}
+            <div className="mt-10 inline-flex items-center gap-2 rounded-full border border-luxe-gold/30 bg-luxe-gold/5 px-6 py-2.5 backdrop-blur-sm">
+              <Heart size={15} className="fill-luxe-gold text-luxe-gold" />
+              <span className="font-serif-luxe tracking-[0.15em] text-luxe-cream">
+                {countdown === 0 ? "É hoje!" : `Faltam ${countdown} dias para o grande dia`}
               </span>
             </div>
           )}
@@ -136,81 +117,69 @@ export default async function PublicWeddingPage({
 
       {/* MENSAGEM */}
       {wedding.welcome_message && (
-        <section className="mx-auto max-w-2xl px-6 py-16 text-center">
-          <span className={cn("inline-block", theme.accentText)}>
-            <Heart size={22} fill="currentColor" />
-          </span>
-          <p className="mt-4 font-display text-xl leading-relaxed text-navy-800 sm:text-2xl">
+        <section className="mx-auto max-w-2xl px-6 py-20 text-center">
+          <LuxeOrnament className="mx-auto w-20" />
+          <p className="mt-6 font-serif-luxe text-2xl font-light leading-relaxed text-luxe-cream/90 sm:text-3xl">
             {wedding.welcome_message}
           </p>
         </section>
       )}
 
       {/* LISTA DE PRESENTES */}
-      <section id="presentes" className="bg-surface-muted py-16">
+      <section id="presentes" className="border-t border-luxe-gold/10 bg-luxe-panel py-20">
         <div className="mx-auto max-w-5xl px-6">
           <div className="text-center">
-            <h2 className="font-display text-3xl font-semibold text-navy-900">
+            <p className="font-serif-luxe text-xs uppercase tracking-[0.4em] text-luxe-gold">
+              Com carinho
+            </p>
+            <h2 className="mt-4 font-serif-luxe text-4xl font-light text-luxe-cream">
               Lista de presentes
             </h2>
-            <p className="mx-auto mt-2 max-w-lg text-ink-500">
+            <p className="mx-auto mt-3 max-w-lg text-luxe-muted">
               Sua presença é o nosso maior presente. Mas se quiser nos
-              presentear, ficaremos muito felizes 💝
+              presentear, ficaremos muito felizes.
             </p>
           </div>
 
           {gifts.length === 0 ? (
-            <div className="mt-10 rounded-2xl border border-dashed border-ink-300 bg-white p-10 text-center text-ink-500">
-              A lista de presentes ainda está sendo preparada. Volte em breve!
+            <div className="mt-12 rounded-[18px] border border-dashed border-luxe-gold/20 bg-luxe-card/50 p-10 text-center text-luxe-muted">
+              A lista de presentes ainda está sendo preparada. Volte em breve.
             </div>
           ) : (
-            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {gifts.map((g) => {
                 const Icon = giftIcon(g.category);
                 return (
                   <div
                     key={g.id}
-                    className="flex flex-col overflow-hidden rounded-2xl border border-ink-200/70 bg-white shadow-sm"
+                    className="group flex flex-col overflow-hidden rounded-[18px] border border-luxe-gold/12 bg-luxe-card transition-all duration-300 hover:-translate-y-1 hover:border-luxe-gold/25 hover:shadow-[0_0_40px_rgba(212,175,55,0.1)]"
                   >
-                    <div className="relative h-40 bg-ink-100">
+                    <div className="relative h-44 overflow-hidden bg-[#0f0f0f]">
                       {g.image_url ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={g.image_url}
-                          alt={g.title}
-                          className="h-full w-full object-cover"
-                        />
+                        <img src={g.image_url} alt={g.title} className="h-full w-full object-cover" />
                       ) : (
-                        <div
-                          className={cn(
-                            "flex h-full w-full items-center justify-center text-white",
-                            theme.hero
-                          )}
-                        >
-                          <Icon size={40} />
+                        <div className="flex h-full w-full items-center justify-center text-luxe-gold/70">
+                          <Icon size={40} strokeWidth={1} />
                         </div>
                       )}
                     </div>
-                    <div className="flex flex-1 flex-col p-5">
-                      <h3 className="font-semibold text-navy-900">{g.title}</h3>
+                    <div className="flex flex-1 flex-col p-6">
+                      <h3 className="font-serif-luxe text-lg text-luxe-cream">{g.title}</h3>
                       {g.description && (
-                        <p className="mt-1 line-clamp-2 text-sm text-ink-500">
-                          {g.description}
-                        </p>
+                        <p className="mt-1 line-clamp-2 text-sm text-luxe-muted">{g.description}</p>
                       )}
-                      <p className="mt-3 font-display text-xl font-semibold text-navy-900">
+                      <p className="mt-3 font-serif-luxe text-2xl font-light text-luxe-gold">
                         {BRL.format(Number(g.price))}
                         {g.type === "quota" && (
-                          <span className="ml-1 text-sm font-normal text-ink-400">
-                            / cota
-                          </span>
+                          <span className="ml-1 text-sm text-luxe-muted">/ cota</span>
                         )}
                       </p>
                       <Link
-                        href={`#`}
+                        href="#"
                         className={cn(
-                          "mt-4 inline-flex items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90",
-                          theme.accentBg
+                          "mt-5 inline-flex items-center justify-center rounded-full border border-luxe-gold/60 px-4 py-2.5",
+                          "text-[11px] uppercase tracking-[0.2em] text-luxe-gold transition-colors duration-300",
+                          "hover:bg-luxe-gold hover:text-luxe-black"
                         )}
                       >
                         Presentear
@@ -225,12 +194,13 @@ export default async function PublicWeddingPage({
       </section>
 
       {/* RODAPÉ */}
-      <footer className="border-t border-ink-200/70 py-8 text-center">
+      <footer className="border-t border-luxe-gold/10 py-10 text-center">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-ink-400 hover:text-navy-900"
+          className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-luxe-muted transition-colors hover:text-luxe-gold"
         >
-          <LogoMark className="h-5 w-5" /> Feito com Case-já
+          <img src="/luxe/logo-casaja.png" alt="" className="h-6 w-auto opacity-80" />
+          Feito com Case-já
         </Link>
       </footer>
     </div>

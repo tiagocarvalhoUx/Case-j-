@@ -2,8 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { Logo } from "@/components/ui/logo";
 import { Container } from "@/components/ui/container";
+import { LuxePage } from "@/components/luxe/ui";
+
+/* eslint-disable @next/next/no-img-element */
 
 async function signOut() {
   "use server";
@@ -22,35 +24,34 @@ export default async function AppLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Proteção redundante ao middleware (defesa em profundidade).
   if (!user) redirect("/entrar");
 
   const coupleNames =
     (user.user_metadata?.couple_names as string | undefined) || user.email;
 
   return (
-    <div className="min-h-screen bg-surface-muted">
-      <header className="border-b border-ink-200/70 bg-white">
+    <LuxePage>
+      <header className="sticky top-0 z-40 border-b border-luxe-gold/12 bg-luxe-black/85 backdrop-blur-md">
         <Container className="flex h-16 items-center justify-between">
           <Link href="/painel" aria-label="Painel Case-já">
-            <Logo className="h-8 w-auto" />
+            <img src="/luxe/logo-casaja.png" alt="Case-já" className="w-16" />
           </Link>
-          <div className="flex items-center gap-4">
-            <span className="hidden text-sm text-ink-500 sm:inline">
+          <div className="flex items-center gap-5">
+            <span className="hidden font-serif-luxe text-sm tracking-[0.15em] text-luxe-cream/80 sm:inline">
               {coupleNames}
             </span>
             <form action={signOut}>
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-ink-600 transition-colors hover:bg-ink-100 hover:text-navy-900"
+                className="inline-flex items-center gap-2 rounded-full border border-luxe-gold/20 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-luxe-muted transition-colors hover:border-luxe-gold/50 hover:text-luxe-gold"
               >
-                <LogOut size={16} /> Sair
+                <LogOut size={15} strokeWidth={1.5} /> Sair
               </button>
             </form>
           </div>
         </Container>
       </header>
       <main>{children}</main>
-    </div>
+    </LuxePage>
   );
 }

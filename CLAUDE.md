@@ -32,6 +32,13 @@ Tokens em [src/app/globals.css](src/app/globals.css) (bloco `@theme`):
   site público). Fontes carregadas em `layout.tsx` via next/font.
 - Utilitários próprios: `text-gradient-brand`, `animate-float`, `animate-fade-up`.
 
+**Tema Luxury (landing `/`)**: redesign "Luxury Minimalism" (preto/dourado/
+esmeralda) fiel ao mockup `src/simbolos/mockup_luxuoso.png`. Tokens `luxe-*` em
+globals.css; fonte `font-serif-luxe` (Cormorant Garamond). Componente em
+`src/components/luxe/luxe-landing.tsx`; assets em `public/luxe/` (flag, menu,
+ornament, logo) e `public/background/hero-luxe.jpg`. O **restante do app**
+(painel/auth/site público) continua no tema claro azul.
+
 Componentes-base em `src/components/ui/`: `Button` (variantes primary/secondary/
 outline/ghost/gold/link via `buttonVariants`), `Card`, `Badge`, `Input`,
 `Container`, `Logo`/`LogoMark`.
