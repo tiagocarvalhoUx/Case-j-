@@ -56,3 +56,5 @@ next-env.d.ts
 
 # Vídeo-fonte do reel (o servido fica em public/reel.mp4)
 /src/Video/
+
+.vercel

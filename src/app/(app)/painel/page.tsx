@@ -49,17 +49,24 @@ export default async function PainelPage() {
 
   const supabase = await createClient();
 
-  const [guestsRes, confirmedRes, giftsRes, paidRes] = await Promise.all([
-    supabase.from("guests").select("*", { count: "exact", head: true }).eq("wedding_id", wedding.id),
-    supabase.from("guests").select("*", { count: "exact", head: true }).eq("wedding_id", wedding.id).eq("rsvp", "confirmed"),
-    supabase.from("gifts").select("*", { count: "exact", head: true }).eq("wedding_id", wedding.id),
-    supabase.from("contributions").select("amount").eq("wedding_id", wedding.id).eq("status", "paid"),
-  ]);
+  const [guestsRes, confirmedRes, giftsRes, paidRes, tasksRes, tasksDoneRes, vendorsRes] =
+    await Promise.all([
+      supabase.from("guests").select("*", { count: "exact", head: true }).eq("wedding_id", wedding.id),
+      supabase.from("guests").select("*", { count: "exact", head: true }).eq("wedding_id", wedding.id).eq("rsvp", "confirmed"),
+      supabase.from("gifts").select("*", { count: "exact", head: true }).eq("wedding_id", wedding.id),
+      supabase.from("contributions").select("amount").eq("wedding_id", wedding.id).eq("status", "paid"),
+      supabase.from("tasks").select("*", { count: "exact", head: true }).eq("wedding_id", wedding.id),
+      supabase.from("tasks").select("*", { count: "exact", head: true }).eq("wedding_id", wedding.id).eq("done", true),
+      supabase.from("vendors").select("*", { count: "exact", head: true }).eq("wedding_id", wedding.id),
+    ]);
 
   const guestsCount = guestsRes.count ?? 0;
   const confirmedCount = confirmedRes.count ?? 0;
   const giftsCount = giftsRes.count ?? 0;
   const raised = (paidRes.data ?? []).reduce((sum, c) => sum + Number(c.amount), 0);
+  const tasksCount = tasksRes.count ?? 0;
+  const tasksDone = tasksDoneRes.count ?? 0;
+  const vendorsCount = vendorsRes.count ?? 0;
 
   const milestones = [true, giftsCount > 0, guestsCount > 0, wedding.published];
   const progress = Math.round((milestones.filter(Boolean).length / milestones.length) * 100);
@@ -77,9 +84,9 @@ export default async function PainelPage() {
   const modules = [
     { icon: Globe, title: "Site do casamento", desc: "Personalize tema, história e informações.", status: wedding.published ? "Publicado" : "Rascunho", href: "/site" },
     { icon: Gift, title: "Lista de presentes", desc: "Presentes em dinheiro e cotas de lua de mel.", status: giftsCount > 0 ? `${giftsCount} itens` : "Adicionar", href: "/presentes" },
-    { icon: Users, title: "Convidados & RSVP", desc: "Importe convidados e acompanhe confirmações.", status: guestsCount > 0 ? `${guestsCount} convidados` : "Em breve", href: "#" },
-    { icon: CalendarCheck, title: "Cronograma", desc: "Checklist de tarefas para não esquecer nada.", status: "Em breve", href: "#" },
-    { icon: Store, title: "Fornecedores", desc: "Organize contatos, contratos e pagamentos.", status: "Em breve", href: "#" },
+    { icon: Users, title: "Convidados & RSVP", desc: "Gerencie a lista e envie convites pelo WhatsApp.", status: guestsCount > 0 ? `${guestsCount} convidados` : "Adicionar", href: "/convidados" },
+    { icon: CalendarCheck, title: "Cronograma", desc: "Checklist inteligente para não esquecer nada.", status: tasksCount > 0 ? `${tasksDone}/${tasksCount} tarefas` : "Começar", href: "/cronograma" },
+    { icon: Store, title: "Fornecedores", desc: "Contatos, orçamentos e custo do casamento.", status: vendorsCount > 0 ? `${vendorsCount} fornecedores` : "Adicionar", href: "/fornecedores" },
   ];
 
   return (

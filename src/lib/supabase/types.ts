@@ -15,6 +15,7 @@ export type Json =
 export type RsvpStatus = "pending" | "confirmed" | "declined";
 export type GiftType = "fixed" | "quota";
 export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+export type VendorStatus = "researching" | "quoted" | "hired" | "paid";
 
 export interface Database {
   public: {
@@ -178,6 +179,82 @@ export interface Database {
           }
         ];
       };
+      tasks: {
+        Row: {
+          id: string;
+          wedding_id: string;
+          title: string;
+          description: string | null;
+          category: string | null;
+          due_date: string | null;
+          done: boolean;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          wedding_id: string;
+          title: string;
+          description?: string | null;
+          category?: string | null;
+          due_date?: string | null;
+          done?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["tasks"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "tasks_wedding_id_fkey";
+            columns: ["wedding_id"];
+            referencedRelation: "weddings";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      vendors: {
+        Row: {
+          id: string;
+          wedding_id: string;
+          name: string;
+          category: string | null;
+          contact_name: string | null;
+          phone: string | null;
+          email: string | null;
+          instagram: string | null;
+          price: number | null;
+          status: VendorStatus;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          wedding_id: string;
+          name: string;
+          category?: string | null;
+          contact_name?: string | null;
+          phone?: string | null;
+          email?: string | null;
+          instagram?: string | null;
+          price?: number | null;
+          status?: VendorStatus;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["vendors"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "vendors_wedding_id_fkey";
+            columns: ["wedding_id"];
+            referencedRelation: "weddings";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -190,6 +267,7 @@ export interface Database {
       rsvp_status: RsvpStatus;
       gift_type: GiftType;
       payment_status: PaymentStatus;
+      vendor_status: VendorStatus;
     };
     CompositeTypes: Record<string, never>;
   };
@@ -207,3 +285,5 @@ export type Wedding = Tables<"weddings">;
 export type Guest = Tables<"guests">;
 export type Gift = Tables<"gifts">;
 export type Contribution = Tables<"contributions">;
+export type Task = Tables<"tasks">;
+export type Vendor = Tables<"vendors">;
