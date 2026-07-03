@@ -50,3 +50,6 @@ next-env.d.ts
 # PNGs-fonte pesados dos ícones/OG (as versões otimizadas em app/ e public/icons são versionadas)
 /src/logo/favicon-case-ja.png
 /src/logo/opengraph-case-ja.png
+
+# Mockup/assets-fonte do tema luxury (versões otimizadas ficam em public/luxe e public/background)
+/src/simbolos/

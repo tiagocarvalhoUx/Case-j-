@@ -1,5 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display, Great_Vibes } from "next/font/google";
+import {
+  Inter,
+  Playfair_Display,
+  Great_Vibes,
+  Cormorant_Garamond,
+} from "next/font/google";
 import "./globals.css";
 import { PwaRegister } from "@/components/pwa-register";
 
@@ -18,6 +23,13 @@ const playfair = Playfair_Display({
 const greatVibes = Great_Vibes({
   variable: "--font-great-vibes",
   weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  weight: ["300", "400", "500", "600"],
   subsets: ["latin"],
   display: "swap",
 });
@@ -82,7 +94,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${inter.variable} ${playfair.variable} ${greatVibes.variable} h-full antialiased`}
+      className={`${inter.variable} ${playfair.variable} ${greatVibes.variable} ${cormorant.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
