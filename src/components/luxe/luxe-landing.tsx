@@ -156,15 +156,19 @@ export function LuxeLanding() {
         </div>
       </aside>
 
-      {/* ---------- Top bar (mobile) ---------- */}
-      <div className="fixed inset-x-0 top-0 z-30 flex items-center justify-between bg-gradient-to-b from-luxe-black/90 to-transparent px-6 py-4 lg:hidden">
-        <a href="#inicio">
-          <img src="/luxe/logo-casaja.png" alt="Case-já" className="w-14" />
-        </a>
-        <button type="button" onClick={() => setOpen(true)} aria-label="Abrir menu" className="text-luxe-gold">
-          <MenuIcon size={26} strokeWidth={1.5} />
-        </button>
-      </div>
+      {/* ---------- Header mobile (fixo, posição por viewport) ---------- */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-30 h-20 bg-gradient-to-b from-luxe-black/85 to-transparent lg:hidden" />
+      <a href="#inicio" className="fixed left-6 top-4 z-40 lg:hidden">
+        <img src="/luxe/logo-casaja.png" alt="Case-já" className="w-14" />
+      </a>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Abrir menu"
+        className="fixed right-5 top-4 z-40 inline-flex h-11 w-11 items-center justify-center rounded-full border border-luxe-gold/50 bg-luxe-black/70 text-luxe-gold transition-colors active:bg-luxe-gold/15 lg:hidden"
+      >
+        <MenuIcon size={22} strokeWidth={1.5} />
+      </button>
 
       {/* ---------- Main ---------- */}
       <main className="min-w-0 flex-1">
@@ -178,9 +182,11 @@ export function LuxeLanding() {
             />
             <div className="absolute inset-0 bg-gradient-to-r from-luxe-black from-15% via-luxe-black/70 via-45% to-transparent to-75%" />
             <div className="absolute inset-0 bg-luxe-black/12" />
-            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-luxe-black/70 to-transparent" />
+            {/* gradiente inferior forte no mobile para legibilidade */}
+            <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-luxe-black via-luxe-black/70 to-transparent lg:hidden" />
+            <div className="absolute inset-x-0 bottom-0 hidden h-40 bg-gradient-to-t from-luxe-black/70 to-transparent lg:block" />
 
-            <div className="relative z-10 flex flex-1 flex-col justify-center px-7 pt-24 pb-16 sm:px-12 lg:max-w-[54%] lg:px-16 lg:py-0">
+            <div className="relative z-10 flex flex-1 flex-col justify-end px-6 pb-14 pt-28 sm:px-12 lg:max-w-[54%] lg:justify-center lg:px-16 lg:py-0">
               <div className="flex items-center gap-4 animate-luxe-in" style={{ animationDelay: "0.05s" }}>
                 <span className="font-serif-luxe text-sm tracking-[0.45em] text-luxe-gold">CASE-JÁ</span>
                 <span className="h-px w-16 bg-luxe-gold/50" />
@@ -201,14 +207,26 @@ export function LuxeLanding() {
                 ))}
               </h1>
 
-              <p className="mt-8 max-w-md font-serif-luxe text-lg leading-relaxed tracking-[0.02em] text-luxe-muted animate-luxe-in sm:text-xl" style={{ animationDelay: "0.55s" }}>
+              <p className="mt-6 max-w-md pr-2 font-serif-luxe text-base leading-relaxed tracking-[0.02em] text-luxe-muted animate-luxe-in sm:mt-8 sm:text-xl" style={{ animationDelay: "0.55s" }}>
                 Mais que eventos, criamos emoções inesquecíveis que permanecem para sempre.
               </p>
 
-              <div className="animate-luxe-in" style={{ animationDelay: "0.68s" }}>
-                <LuxeArrowLink href="/criar" className="mt-10">
-                  Comece a planejar
-                </LuxeArrowLink>
+              <div className="mt-8 flex flex-col gap-6 animate-luxe-in sm:flex-row sm:items-center sm:gap-8 lg:mt-10" style={{ animationDelay: "0.68s" }}>
+                <LuxeArrowLink href="/criar">Comece a planejar</LuxeArrowLink>
+
+                {/* PLAY REEL — mobile/tablet (clean) */}
+                <button
+                  type="button"
+                  onClick={() => setReelOpen(true)}
+                  className="flex w-fit items-center gap-3 lg:hidden"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-luxe-gold/60 text-luxe-gold transition-transform duration-300 active:scale-95">
+                    <Play size={13} strokeWidth={1} className="ml-0.5 fill-luxe-gold" />
+                  </span>
+                  <span className="font-serif-luxe text-xs tracking-[0.3em] text-luxe-gold">
+                    ASSISTIR REEL
+                  </span>
+                </button>
               </div>
             </div>
 

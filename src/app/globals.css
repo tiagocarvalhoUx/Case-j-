@@ -138,6 +138,12 @@
     text-wrap: balance;
   }
 
+  /* Evita que imagens/mídia forcem overflow horizontal (min-width intrínseco)
+     em grids/flex — causa comum de scroll lateral no mobile. */
+  img, video, svg {
+    max-width: 100%;
+  }
+
   ::selection {
     background: var(--color-primary-200);
     color: var(--color-navy-900);
