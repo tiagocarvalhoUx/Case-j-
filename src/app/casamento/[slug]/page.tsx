@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CalendarDays, MapPin, Gift, Plane, Heart, PiggyBank } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { LuxeOrnament } from "@/components/luxe/ui";
+import { RsvpForm } from "./rsvp-form";
 import { cn } from "@/lib/utils";
 import type { Gift as GiftRow, Wedding } from "@/lib/supabase/types";
 
@@ -124,6 +125,25 @@ export default async function PublicWeddingPage({
           </p>
         </section>
       )}
+
+      {/* RSVP */}
+      <section id="rsvp" className="border-t border-luxe-gold/10 py-20">
+        <div className="mx-auto max-w-2xl px-6 text-center">
+          <p className="font-serif-luxe text-xs uppercase tracking-[0.4em] text-luxe-gold">
+            Sua presença
+          </p>
+          <h2 className="mt-4 font-serif-luxe text-4xl font-light text-luxe-cream">
+            Confirme sua presença
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-luxe-muted">
+            Ficaremos muito felizes em celebrar esse dia com você. Conte para nós
+            se poderá comparecer.
+          </p>
+        </div>
+        <div className="mt-10 px-6">
+          <RsvpForm weddingId={wedding.id} />
+        </div>
+      </section>
 
       {/* LISTA DE PRESENTES */}
       <section id="presentes" className="border-t border-luxe-gold/10 bg-luxe-panel py-20">
