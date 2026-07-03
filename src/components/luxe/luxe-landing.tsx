@@ -1,16 +1,37 @@
 "use client";
 
-import { useState } from "react";
-import { Play, ArrowRight, ArrowLeft, Menu as MenuIcon, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Play,
+  ArrowRight,
+  ArrowLeft,
+  Menu as MenuIcon,
+  X,
+  Crown,
+  CalendarHeart,
+  Gift,
+  Plane,
+  Quote,
+  Mail,
+  Phone,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  LuxeEyebrow,
+  luxeButton,
+  LuxeArrowLink,
+  LuxeOrnament,
+} from "@/components/luxe/ui";
+
+/* eslint-disable @next/next/no-img-element */
 
 const navItems = [
-  { n: "01", label: "HOME", href: "/", active: true },
-  { n: "02", label: "ABOUT", href: "#" },
-  { n: "03", label: "SERVICES", href: "#" },
-  { n: "04", label: "PORTFOLIO", href: "#" },
-  { n: "05", label: "JOURNAL", href: "#" },
-  { n: "06", label: "CONTACT", href: "#" },
+  { n: "01", id: "inicio", label: "INÍCIO" },
+  { n: "02", id: "sobre", label: "SOBRE" },
+  { n: "03", id: "servicos", label: "SERVIÇOS" },
+  { n: "04", id: "portfolio", label: "PORTFÓLIO" },
+  { n: "05", id: "depoimentos", label: "DEPOIMENTOS" },
+  { n: "06", id: "contato", label: "CONTATO" },
 ];
 
 const stats = [
@@ -20,122 +41,151 @@ const stats = [
   { value: "98%", l1: "CLIENTES", l2: "SATISFEITOS" },
 ];
 
-/* eslint-disable @next/next/no-img-element */
+const services = [
+  { icon: Crown, title: "Planejamento completo", desc: "Do conceito à execução, cuidamos de cada detalhe do seu grande dia." },
+  { icon: CalendarHeart, title: "Cerimonial & Dia D", desc: "Coordenação impecável para vocês viverem cada momento sem preocupações." },
+  { icon: Gift, title: "Lista de presentes", desc: "Presentes que viram dinheiro direto na conta dos noivos, com elegância." },
+  { icon: Plane, title: "Cotas de lua de mel", desc: "Seus convidados ajudam a realizar a viagem dos sonhos, cota por cota." },
+];
 
-function NavList({ onNavigate }: { onNavigate?: () => void }) {
+const portfolio = [
+  "/background/hero-luxe.jpg",
+  "/background/wedding-1.png",
+  "/background/wedding-2.png",
+  "/background/wedding-4.png",
+  "/background/wedding-3.png",
+  "/background/wedding-6.avif",
+];
+
+const testimonials = [
+  { quote: "Cada detalhe foi impecável. Recebemos os presentes direto na conta e vivemos um dia de conto de fadas.", author: "Marina & Rafael" },
+  { quote: "Sofisticação e tranquilidade do início ao fim. Nossos convidados não param de elogiar.", author: "Beatriz & André" },
+  { quote: "A lista de presentes em cotas foi genial. Realizamos a lua de mel dos sonhos.", author: "Camila & Lucas" },
+];
+
+function NavList({
+  active,
+  onNavigate,
+}: {
+  active: string;
+  onNavigate?: () => void;
+}) {
   return (
-    <nav className="space-y-7">
-      {navItems.map((it, i) => (
-        <a
-          key={it.label}
-          href={it.href}
-          onClick={onNavigate}
-          className="group block animate-luxe-in"
-          style={{ animationDelay: `${0.15 + i * 0.06}s` }}
-        >
-          <span className="flex items-center gap-3 font-serif-luxe text-[11px] tracking-[0.3em] text-luxe-gold/70">
+    <nav className="space-y-6">
+      {navItems.map((it) => {
+        const isActive = active === it.id;
+        return (
+          <a
+            key={it.id}
+            href={`#${it.id}`}
+            onClick={onNavigate}
+            className="group block"
+          >
+            <span className="flex items-center gap-3 font-serif-luxe text-[11px] tracking-[0.3em] text-luxe-gold/70">
+              <span
+                className={cn(
+                  "h-px transition-all duration-300",
+                  isActive
+                    ? "w-8 bg-luxe-gold"
+                    : "w-4 bg-luxe-gold/40 group-hover:w-8 group-hover:bg-luxe-gold"
+                )}
+              />
+              {it.n}
+            </span>
             <span
               className={cn(
-                "h-px transition-all duration-300",
-                it.active
-                  ? "w-8 bg-luxe-gold"
-                  : "w-4 bg-luxe-gold/40 group-hover:w-8 group-hover:bg-luxe-gold"
+                "mt-1 block font-serif-luxe text-sm tracking-[0.3em] transition-colors duration-300",
+                isActive ? "text-luxe-gold" : "text-luxe-cream/85 group-hover:text-luxe-gold"
               )}
-            />
-            {it.n}
-          </span>
-          <span
-            className={cn(
-              "mt-1.5 block font-serif-luxe text-sm tracking-[0.35em] transition-colors duration-300",
-              it.active
-                ? "text-luxe-gold"
-                : "text-luxe-cream/85 group-hover:text-luxe-gold"
-            )}
-          >
-            {it.label}
-          </span>
-        </a>
-      ))}
+            >
+              {it.label}
+            </span>
+          </a>
+        );
+      })}
     </nav>
   );
 }
 
 export function LuxeLanding() {
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("inicio");
+
+  // Scroll-spy: destaca o item do menu conforme a seção visível.
+  useEffect(() => {
+    const sections = navItems
+      .map((i) => document.getElementById(i.id))
+      .filter((el): el is HTMLElement => Boolean(el));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(e.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="relative flex min-h-screen bg-luxe-black font-sans text-luxe-cream">
-      {/* ---------- Sidebar (desktop) ---------- */}
-      <aside className="relative z-20 hidden w-60 shrink-0 flex-col justify-between border-r border-luxe-gold/10 bg-luxe-black px-8 py-9 lg:flex">
+    <div className="relative flex bg-luxe-black font-sans text-luxe-cream">
+      {/* ---------- Sidebar (desktop, fixa) ---------- */}
+      <aside className="sticky top-0 z-20 hidden h-screen w-60 shrink-0 flex-col justify-between border-r border-luxe-gold/10 bg-luxe-black px-8 py-9 lg:flex">
         <div>
-          <img
-            src="/luxe/logo-casaja.png"
-            alt="Case-já — Wedding Planning"
-            className="w-24 animate-luxe-in"
-          />
-          <div className="mt-16">
-            <NavList />
+          <a href="#inicio">
+            <img src="/luxe/logo-casaja.png" alt="Case-já — Wedding Planning" className="w-24" />
+          </a>
+          <div className="mt-14">
+            <NavList active={active} />
           </div>
         </div>
-        <div className="flex justify-center pt-8">
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            aria-label="Abrir menu"
-            className="group transition-transform duration-300 hover:scale-[1.04]"
-          >
+        <div className="flex flex-col items-center gap-5 pt-6">
+          <a href="/entrar" className="text-[11px] uppercase tracking-[0.25em] text-luxe-muted transition-colors hover:text-luxe-gold">
+            Entrar
+          </a>
+          <a href="#contato" className="group transition-transform duration-300 hover:scale-[1.04]" aria-label="Fale conosco">
             <img
               src="/luxe/menu.png"
               alt="Menu"
-              className="w-28 drop-shadow-[0_0_22px_rgba(212,175,55,0.12)] transition-[filter] duration-300 group-hover:drop-shadow-[0_0_34px_rgba(212,175,55,0.3)]"
+              className="w-24 drop-shadow-[0_0_22px_rgba(212,175,55,0.12)] transition-[filter] duration-300 group-hover:drop-shadow-[0_0_34px_rgba(212,175,55,0.3)]"
             />
-          </button>
+          </a>
         </div>
       </aside>
 
       {/* ---------- Top bar (mobile) ---------- */}
-      <div className="absolute inset-x-0 top-0 z-30 flex items-center justify-between px-6 py-5 lg:hidden">
-        <img src="/luxe/logo-casaja.png" alt="Case-já" className="w-14" />
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Abrir menu"
-          className="text-luxe-gold"
-        >
+      <div className="fixed inset-x-0 top-0 z-30 flex items-center justify-between bg-gradient-to-b from-luxe-black/90 to-transparent px-6 py-4 lg:hidden">
+        <a href="#inicio">
+          <img src="/luxe/logo-casaja.png" alt="Case-já" className="w-14" />
+        </a>
+        <button type="button" onClick={() => setOpen(true)} aria-label="Abrir menu" className="text-luxe-gold">
           <MenuIcon size={26} strokeWidth={1.5} />
         </button>
       </div>
 
       {/* ---------- Main ---------- */}
-      <main className="relative flex min-h-screen flex-1 flex-col">
-        {/* HERO */}
-        <section className="relative flex flex-1 flex-col overflow-hidden">
-          {/* Foto cinematográfica */}
-          <img
-            src="/background/hero-luxe.jpg"
-            alt="Noiva em salão de festas luxuoso"
-            className="absolute inset-y-0 right-0 h-full w-full object-cover object-center lg:w-[66%]"
-          />
-          {/* Overlays: escurece a esquerda (título) e dá clima cinematográfico */}
-          <div className="absolute inset-0 bg-gradient-to-r from-luxe-black from-15% via-luxe-black/70 via-45% to-transparent to-75%" />
-          <div className="absolute inset-0 bg-luxe-black/12" />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-luxe-black/70 to-transparent" />
+      <main className="min-w-0 flex-1">
+        {/* ===== PRIMEIRA TELA: HERO + STATS ===== */}
+        <div className="flex min-h-screen flex-col">
+          <section id="inicio" className="relative flex flex-1 flex-col overflow-hidden scroll-mt-20">
+            <img
+              src="/background/hero-luxe.jpg"
+              alt="Noiva em salão de festas luxuoso"
+              className="absolute inset-y-0 right-0 h-full w-full object-cover object-center lg:w-[66%]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-luxe-black from-15% via-luxe-black/70 via-45% to-transparent to-75%" />
+            <div className="absolute inset-0 bg-luxe-black/12" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-luxe-black/70 to-transparent" />
 
-          {/* Conteúdo (esquerda) */}
-          <div className="relative z-10 flex flex-1 flex-col justify-center px-7 pt-24 pb-16 sm:px-12 lg:max-w-[54%] lg:px-16 lg:py-0">
-            <div
-              className="flex items-center gap-4 animate-luxe-in"
-              style={{ animationDelay: "0.05s" }}
-            >
-              <span className="font-serif-luxe text-sm tracking-[0.45em] text-luxe-gold">
-                CASE-JÁ
-              </span>
-              <span className="h-px w-16 bg-luxe-gold/50" />
-            </div>
+            <div className="relative z-10 flex flex-1 flex-col justify-center px-7 pt-24 pb-16 sm:px-12 lg:max-w-[54%] lg:px-16 lg:py-0">
+              <div className="flex items-center gap-4 animate-luxe-in" style={{ animationDelay: "0.05s" }}>
+                <span className="font-serif-luxe text-sm tracking-[0.45em] text-luxe-gold">CASE-JÁ</span>
+                <span className="h-px w-16 bg-luxe-gold/50" />
+              </div>
 
-            <h1 className="mt-6 font-serif-luxe font-light leading-[0.92] tracking-[-0.01em]">
-              {["Planejamos", "histórias.", "Criamos", "lembranças."].map(
-                (word, i) => (
+              <h1 className="mt-6 font-serif-luxe font-light leading-[0.92] tracking-[-0.01em]">
+                {["Planejamos", "histórias.", "Criamos", "lembranças."].map((word, i) => (
                   <span
                     key={word}
                     className={cn(
@@ -146,107 +196,207 @@ export function LuxeLanding() {
                   >
                     {word}
                   </span>
-                )
-              )}
-            </h1>
+                ))}
+              </h1>
 
-            <p
-              className="mt-8 max-w-md font-serif-luxe text-lg leading-relaxed tracking-[0.02em] text-luxe-muted animate-luxe-in sm:text-xl"
-              style={{ animationDelay: "0.55s" }}
-            >
-              Mais que eventos, criamos emoções inesquecíveis que permanecem para
-              sempre.
-            </p>
+              <p className="mt-8 max-w-md font-serif-luxe text-lg leading-relaxed tracking-[0.02em] text-luxe-muted animate-luxe-in sm:text-xl" style={{ animationDelay: "0.55s" }}>
+                Mais que eventos, criamos emoções inesquecíveis que permanecem para sempre.
+              </p>
 
-            <a
-              href="/criar"
-              className="group mt-10 inline-flex w-fit items-center gap-4 animate-luxe-in"
-              style={{ animationDelay: "0.68s" }}
-            >
-              <span className="font-serif-luxe text-sm tracking-[0.3em] text-luxe-gold transition-colors duration-300 group-hover:text-luxe-gold-soft">
-                COMECE A PLANEJAR
+              <div className="animate-luxe-in" style={{ animationDelay: "0.68s" }}>
+                <LuxeArrowLink href="/criar" className="mt-10">
+                  Comece a planejar
+                </LuxeArrowLink>
+              </div>
+            </div>
+
+            <img
+              src="/luxe/flag.png"
+              alt="Eventos exclusivos"
+              className="absolute right-10 top-0 z-20 hidden w-[92px] transition-[filter] duration-300 hover:drop-shadow-[0_0_26px_rgba(212,175,55,0.4)] sm:block lg:w-[108px]"
+            />
+
+            <div className="absolute right-9 top-[34%] z-20 hidden flex-col items-center gap-3 lg:flex">
+              <span className="font-serif-luxe text-xs tracking-[0.3em] text-luxe-gold">PLAY REEL</span>
+              <button type="button" aria-label="Assistir reel" className="flex h-14 w-14 items-center justify-center rounded-full border border-luxe-gold/60 transition-all duration-300 hover:scale-[1.08] hover:border-luxe-gold hover:shadow-[0_0_30px_rgba(212,175,55,0.25)]">
+                <Play size={15} strokeWidth={1} className="ml-0.5 fill-luxe-gold text-luxe-gold" />
+              </button>
+            </div>
+
+            <div className="absolute bottom-8 right-9 z-20 hidden items-center gap-6 lg:flex">
+              <a href="#depoimentos" aria-label="Anterior" className="text-luxe-cream/60 transition-colors hover:text-luxe-gold">
+                <ArrowLeft size={22} strokeWidth={1} />
+              </a>
+              <span className="font-serif-luxe text-lg tracking-[0.25em]">
+                <span className="text-luxe-gold">01</span>
+                <span className="text-luxe-cream/50"> / 06</span>
               </span>
-              <span className="flex items-center">
-                <span className="h-px w-12 bg-luxe-gold transition-all duration-300 group-hover:w-20 group-hover:bg-luxe-gold-soft" />
-                <ArrowRight
-                  size={16}
-                  strokeWidth={1.5}
-                  className="-ml-1 text-luxe-gold transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </span>
-            </a>
+              <a href="#sobre" aria-label="Próximo" className="text-luxe-cream/60 transition-colors hover:text-luxe-gold">
+                <ArrowRight size={22} strokeWidth={1} />
+              </a>
+            </div>
+          </section>
+
+          <div className="relative z-10 border-t border-luxe-gold/15 bg-gradient-to-b from-luxe-emerald-3 to-[#041d17]">
+            <div className="grid grid-cols-2 divide-x divide-y divide-luxe-gold/12 lg:grid-cols-4 lg:divide-y-0">
+              {stats.map((s) => (
+                <div key={s.value} className="flex flex-col items-center px-6 py-9 text-center lg:py-11">
+                  <span className="font-serif-luxe text-4xl font-light text-luxe-gold lg:text-[2.9rem]">{s.value}</span>
+                  <span className="mt-3 font-serif-luxe text-xs tracking-[0.3em] text-luxe-cream/90">{s.l1}</span>
+                  <span className="font-serif-luxe text-xs tracking-[0.3em] text-luxe-cream/65">{s.l2}</span>
+                  <LuxeOrnament className="mt-4" />
+                </div>
+              ))}
+            </div>
           </div>
+        </div>
 
-          {/* Badge (pennant) */}
-          <img
-            src="/luxe/flag.png"
-            alt="Eventos exclusivos"
-            className="absolute right-10 top-0 z-20 hidden w-[92px] transition-[filter] duration-300 hover:drop-shadow-[0_0_26px_rgba(212,175,55,0.4)] sm:block lg:w-[108px]"
-          />
-
-          {/* Play reel */}
-          <div className="absolute right-9 top-[34%] z-20 hidden flex-col items-center gap-3 lg:flex">
-            <span className="font-serif-luxe text-xs tracking-[0.3em] text-luxe-gold">
-              PLAY REEL
-            </span>
-            <button
-              type="button"
-              aria-label="Assistir reel"
-              className="flex h-14 w-14 items-center justify-center rounded-full border border-luxe-gold/60 transition-all duration-300 hover:scale-[1.08] hover:border-luxe-gold hover:shadow-[0_0_30px_rgba(212,175,55,0.25)]"
-            >
-              <Play size={15} strokeWidth={1} className="ml-0.5 fill-luxe-gold text-luxe-gold" />
-            </button>
-          </div>
-
-          {/* Slider */}
-          <div className="absolute bottom-8 right-9 z-20 hidden items-center gap-6 lg:flex">
-            <button
-              type="button"
-              aria-label="Anterior"
-              className="text-luxe-cream/60 transition-colors hover:text-luxe-gold"
-            >
-              <ArrowLeft size={22} strokeWidth={1} />
-            </button>
-            <span className="font-serif-luxe text-lg tracking-[0.25em]">
-              <span className="text-luxe-gold">01</span>
-              <span className="text-luxe-cream/50"> / 06</span>
-            </span>
-            <button
-              type="button"
-              aria-label="Próximo"
-              className="text-luxe-cream/60 transition-colors hover:text-luxe-gold"
-            >
-              <ArrowRight size={22} strokeWidth={1} />
-            </button>
+        {/* ===== SOBRE ===== */}
+        <section id="sobre" className="scroll-mt-20 px-7 py-24 sm:px-12 lg:px-20 lg:py-32">
+          <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
+            <div className="relative">
+              <img src="/background/wedding-4.png" alt="Casamento planejado pela Case-já" className="aspect-[4/5] w-full rounded-[18px] object-cover" />
+              <div className="pointer-events-none absolute inset-0 rounded-[18px] ring-1 ring-inset ring-luxe-gold/20" />
+            </div>
+            <div>
+              <LuxeEyebrow>Sobre nós</LuxeEyebrow>
+              <h2 className="mt-6 font-serif-luxe text-4xl font-light leading-tight text-luxe-cream sm:text-5xl">
+                Requinte e emoção em <span className="text-luxe-gold">cada detalhe</span>.
+              </h2>
+              <p className="mt-6 leading-relaxed text-luxe-muted">
+                A Case-já nasceu para transformar o planejamento do casamento em
+                uma experiência serena e sofisticada. Unimos curadoria impecável,
+                tecnologia elegante e um olhar apaixonado por detalhes para que
+                vocês vivam apenas o melhor: a emoção.
+              </p>
+              <p className="mt-4 leading-relaxed text-luxe-muted">
+                Do site personalizado à lista de presentes que vira dinheiro na
+                conta dos noivos, tudo é pensado para encantar vocês e seus
+                convidados.
+              </p>
+              <LuxeArrowLink href="#servicos" className="mt-8">
+                Nossos serviços
+              </LuxeArrowLink>
+            </div>
           </div>
         </section>
 
-        {/* STATS BAR */}
-        <div className="relative z-10 border-t border-luxe-gold/15 bg-gradient-to-b from-luxe-emerald-3 to-[#041d17]">
-          <div className="grid grid-cols-2 divide-x divide-y divide-luxe-gold/12 lg:grid-cols-4 lg:divide-y-0">
-            {stats.map((s) => (
-              <div
-                key={s.value}
-                className="flex flex-col items-center px-6 py-9 text-center lg:py-11"
-              >
-                <span className="font-serif-luxe text-4xl font-light text-luxe-gold lg:text-[2.9rem]">
-                  {s.value}
-                </span>
-                <span className="mt-3 font-serif-luxe text-xs tracking-[0.3em] text-luxe-cream/90">
-                  {s.l1}
-                </span>
-                <span className="font-serif-luxe text-xs tracking-[0.3em] text-luxe-cream/65">
-                  {s.l2}
-                </span>
-                <img
-                  src="/luxe/ornament.png"
-                  alt=""
-                  className="mt-4 w-16 opacity-80"
-                />
-              </div>
-            ))}
+        {/* ===== SERVIÇOS ===== */}
+        <section id="servicos" className="scroll-mt-20 border-t border-luxe-gold/10 bg-luxe-panel px-7 py-24 sm:px-12 lg:px-20 lg:py-32">
+          <div className="mx-auto max-w-6xl">
+            <div className="max-w-2xl">
+              <LuxeEyebrow>Serviços</LuxeEyebrow>
+              <h2 className="mt-6 font-serif-luxe text-4xl font-light text-luxe-cream sm:text-5xl">
+                Uma experiência completa, do sim ao adeus.
+              </h2>
+            </div>
+            <div className="mt-14 grid gap-5 sm:grid-cols-2">
+              {services.map((s) => (
+                <div key={s.title} className="group flex gap-5 rounded-[18px] border border-luxe-gold/12 bg-luxe-card/70 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-luxe-gold/25 hover:shadow-[0_0_40px_rgba(212,175,55,0.08)]">
+                  <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-luxe-gold/25 text-luxe-gold transition-colors group-hover:bg-luxe-gold group-hover:text-luxe-black">
+                    <s.icon size={22} strokeWidth={1.5} />
+                  </span>
+                  <div>
+                    <h3 className="font-serif-luxe text-xl text-luxe-cream">{s.title}</h3>
+                    <p className="mt-2 leading-relaxed text-luxe-muted">{s.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
+
+        {/* ===== PORTFÓLIO ===== */}
+        <section id="portfolio" className="scroll-mt-20 px-7 py-24 sm:px-12 lg:px-20 lg:py-32">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center">
+              <div className="flex justify-center">
+                <LuxeEyebrow>Portfólio</LuxeEyebrow>
+              </div>
+              <h2 className="mt-6 font-serif-luxe text-4xl font-light text-luxe-cream sm:text-5xl">
+                Momentos que viraram eternidade.
+              </h2>
+            </div>
+            <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-3">
+              {portfolio.map((src, i) => (
+                <div key={src} className={cn("group relative overflow-hidden rounded-[14px]", i === 0 && "col-span-2 md:col-span-1 md:row-span-2")}>
+                  <img src={src} alt="Casamento Case-já" className={cn("h-full w-full object-cover transition-transform duration-500 group-hover:scale-105", i === 0 ? "aspect-[3/4] md:aspect-auto md:h-full" : "aspect-square")} />
+                  <div className="absolute inset-0 bg-luxe-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="pointer-events-none absolute inset-0 rounded-[14px] ring-1 ring-inset ring-luxe-gold/15" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===== DEPOIMENTOS ===== */}
+        <section id="depoimentos" className="scroll-mt-20 border-t border-luxe-gold/10 bg-luxe-panel px-7 py-24 sm:px-12 lg:px-20 lg:py-32">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center">
+              <div className="flex justify-center">
+                <LuxeEyebrow>Depoimentos</LuxeEyebrow>
+              </div>
+              <h2 className="mt-6 font-serif-luxe text-4xl font-light text-luxe-cream sm:text-5xl">
+                O que os casais dizem.
+              </h2>
+            </div>
+            <div className="mt-14 grid gap-5 lg:grid-cols-3">
+              {testimonials.map((t) => (
+                <div key={t.author} className="rounded-[18px] border border-luxe-gold/12 bg-luxe-card/70 p-8">
+                  <Quote size={26} className="text-luxe-gold/50" />
+                  <p className="mt-4 font-serif-luxe text-lg italic leading-relaxed text-luxe-cream/90">
+                    “{t.quote}”
+                  </p>
+                  <p className="mt-5 text-[11px] uppercase tracking-[0.25em] text-luxe-gold">{t.author}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===== CONTATO ===== */}
+        <section id="contato" className="relative scroll-mt-20 overflow-hidden px-7 py-28 sm:px-12 lg:px-20 lg:py-36">
+          <img src="/background/wedding-1.png" alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-luxe-black/85" />
+          <div className="relative mx-auto max-w-2xl text-center">
+            <div className="flex justify-center">
+              <LuxeOrnament className="w-24" />
+            </div>
+            <h2 className="mt-6 font-serif-luxe text-4xl font-light leading-tight text-luxe-cream sm:text-5xl">
+              Vamos planejar o casamento dos <span className="text-luxe-gold">seus sonhos</span>.
+            </h2>
+            <p className="mx-auto mt-5 max-w-lg text-luxe-muted">
+              Crie seu site em minutos e comece a receber os presentes. É grátis
+              para começar.
+            </p>
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <a href="/criar" className={luxeButton({ size: "lg" })}>
+                Comece a planejar <ArrowRight size={16} strokeWidth={1.5} />
+              </a>
+              <a href="/entrar" className="text-[11px] uppercase tracking-[0.25em] text-luxe-cream/70 transition-colors hover:text-luxe-gold">
+                Já tenho conta
+              </a>
+            </div>
+            <div className="mt-12 flex flex-col items-center justify-center gap-x-10 gap-y-3 text-sm text-luxe-muted sm:flex-row">
+              <a href="mailto:contato@case-ja.com.br" className="inline-flex items-center gap-2 hover:text-luxe-gold">
+                <Mail size={15} strokeWidth={1.5} /> contato@case-ja.com.br
+              </a>
+              <a href="tel:+5511999999999" className="inline-flex items-center gap-2 hover:text-luxe-gold">
+                <Phone size={15} strokeWidth={1.5} /> (11) 99999-9999
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== FOOTER ===== */}
+        <footer className="border-t border-luxe-gold/10 bg-luxe-black px-7 py-10 sm:px-12 lg:px-20">
+          <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
+            <img src="/luxe/logo-casaja.png" alt="Case-já" className="w-16" />
+            <p className="text-[11px] uppercase tracking-[0.2em] text-luxe-muted/70">
+              © {new Date().getFullYear()} Case-já · Todos os direitos reservados
+            </p>
+          </div>
+        </footer>
       </main>
 
       {/* ---------- Drawer (mobile) ---------- */}
@@ -254,26 +404,21 @@ export function LuxeLanding() {
         <div className="fixed inset-0 z-50 flex flex-col bg-luxe-black/97 px-8 py-7 backdrop-blur-sm lg:hidden">
           <div className="flex items-center justify-between">
             <img src="/luxe/logo-casaja.png" alt="Case-já" className="w-20" />
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Fechar menu"
-              className="text-luxe-gold"
-            >
+            <button type="button" onClick={() => setOpen(false)} aria-label="Fechar menu" className="text-luxe-gold">
               <X size={26} strokeWidth={1.5} />
             </button>
           </div>
-          <div className="mt-16">
-            <NavList onNavigate={() => setOpen(false)} />
+          <div className="mt-14">
+            <NavList active={active} onNavigate={() => setOpen(false)} />
           </div>
-          <a
-            href="/criar"
-            onClick={() => setOpen(false)}
-            className="mt-auto inline-flex items-center gap-3 font-serif-luxe text-sm tracking-[0.3em] text-luxe-gold"
-          >
-            COMECE A PLANEJAR
-            <ArrowRight size={16} strokeWidth={1.5} />
-          </a>
+          <div className="mt-auto flex flex-col gap-4">
+            <a href="/entrar" onClick={() => setOpen(false)} className="text-[11px] uppercase tracking-[0.25em] text-luxe-muted">
+              Entrar
+            </a>
+            <a href="/criar" onClick={() => setOpen(false)} className="inline-flex items-center gap-3 font-serif-luxe text-sm uppercase tracking-[0.3em] text-luxe-gold">
+              Comece a planejar <ArrowRight size={16} strokeWidth={1.5} />
+            </a>
+          </div>
         </div>
       )}
     </div>
