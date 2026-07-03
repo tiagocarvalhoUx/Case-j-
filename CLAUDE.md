@@ -104,5 +104,14 @@ site** (`/site`, salva campos + publica/despublica); **página pública**
 `/casamento/[slug]` (hero temático via `src/lib/themes.ts`, contagem regressiva,
 lista de presentes — RLS deixa o dono pré-visualizar antes de publicar).
 
-A seguir: RSVP público na página do casamento → CRUD da lista de presentes no
-painel → checkout Asaas (Pix/boleto/cartão) → confirmação via webhook.
+Feito também: RSVP público (migration 0002) → CRUD de presentes → checkout
+Asaas com webhook (validado ponta a ponta em produção) → **deploy na Vercel**
+(https://case-ja.vercel.app, auto-deploy via push na main) → módulos
+**Convidados & RSVP** (`/convidados`, convite via WhatsApp), **Cronograma**
+(`/cronograma`, checklist inteligente em `src/lib/checklist.ts` com prazos
+pela data) e **Fornecedores** (`/fornecedores`, pipeline + custos) — migration
+0003 (tasks/vendors).
+
+Pendências do usuário: aplicar migrations 0002/0003 no SQL Editor; configurar
+URLs de Auth do Supabase para https://case-ja.vercel.app; rotacionar chaves
+Asaas/service-role expostas em chat.
