@@ -23,9 +23,23 @@ Production + Preview):
 | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://SEU-PROJETO.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | a chave **publishable/anon** |
+| `SUPABASE_SERVICE_ROLE_KEY` | service role (secret) — webhook confirma pagamentos |
 | `NEXT_PUBLIC_SITE_URL` | a URL de produção (ex.: `https://case-ja.vercel.app`) |
+| `ASAAS_API_KEY` | chave da API do Asaas |
+| `ASAAS_ENV` | `sandbox` (testes) ou `production` |
+| `ASAAS_WEBHOOK_TOKEN` | um token que você define (usado no webhook) |
 
 Depois clique em **Deploy**.
+
+## 3.1 Configurar o webhook do Asaas (confirmação de pagamento)
+
+No painel **Asaas → Integrações → Webhooks**, crie um webhook:
+- **URL**: `https://SEU-DOMINIO/api/asaas/webhook`
+- **Token de autenticação**: o mesmo valor de `ASAAS_WEBHOOK_TOKEN`
+- Eventos: pagamentos (PAYMENT_CONFIRMED / PAYMENT_RECEIVED, etc.)
+
+Sem o webhook + `SUPABASE_SERVICE_ROLE_KEY`, a cobrança é criada mas a
+contribuição não é marcada como **paga** automaticamente.
 
 ## 4. Configurar Auth no Supabase (essencial p/ confirmação de e-mail)
 
