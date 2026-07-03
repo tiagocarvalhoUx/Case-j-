@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
  *   (ex.: "/reel-music.mp3"). Deixe "" para sem música.
  * ============================================================
  */
-const REEL_VIDEO = "";
+const REEL_VIDEO = "/reel.mp4";
 const REEL_MUSIC = "";
 
 const MONTAGE = [

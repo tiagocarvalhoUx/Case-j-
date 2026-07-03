@@ -53,3 +53,6 @@ next-env.d.ts
 
 # Mockup/assets-fonte do tema luxury (versões otimizadas ficam em public/luxe e public/background)
 /src/simbolos/
+
+# Vídeo-fonte do reel (o servido fica em public/reel.mp4)
+/src/Video/
