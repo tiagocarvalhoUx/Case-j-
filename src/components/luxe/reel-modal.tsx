@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { X, Maximize2, Minimize2, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* eslint-disable @next/next/no-img-element */
@@ -9,13 +9,15 @@ import { cn } from "@/lib/utils";
 /**
  * ============================================================
  * CONFIGURE AQUI O SEU REEL
- * - Cole um link do YouTube ou Vimeo, OU o caminho de um .mp4 em /public
+ * - REEL_VIDEO: link do YouTube/Vimeo OU caminho de um .mp4 em /public
  *   (ex.: "/reel.mp4"). Deixe "" para usar a montagem automática das fotos.
+ * - REEL_MUSIC: caminho de um .mp3 em /public para a trilha da montagem
+ *   (ex.: "/reel-music.mp3"). Deixe "" para sem música.
  * ============================================================
  */
 const REEL_VIDEO = "";
+const REEL_MUSIC = "";
 
-/** Fotos usadas na montagem automática (fallback sem vídeo). */
 const MONTAGE = [
   "/background/hero-luxe.jpg",
   "/background/wedding-1.png",
@@ -28,9 +30,8 @@ const MONTAGE = [
 function parseEmbed(url: string): string | null {
   try {
     const u = new URL(url, "https://x");
-    if (u.hostname.includes("youtu.be")) {
+    if (u.hostname.includes("youtu.be"))
       return `https://www.youtube.com/embed/${u.pathname.slice(1)}?autoplay=1&rel=0`;
-    }
     if (u.hostname.includes("youtube.com")) {
       const id = u.searchParams.get("v");
       return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : null;
@@ -85,6 +86,17 @@ export function ReelModal({
   open: boolean;
   onClose: () => void;
 }) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isFull, setIsFull] = useState(false);
+  const [muted, setMuted] = useState(false);
+
+  const embed = REEL_VIDEO ? parseEmbed(REEL_VIDEO) : null;
+  const isMp4 = REEL_VIDEO.toLowerCase().endsWith(".mp4");
+  const isMontage = !embed && !isMp4;
+  const hasMusic = isMontage && Boolean(REEL_MUSIC);
+
+  // ESC + trava de scroll
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -97,10 +109,35 @@ export function ReelModal({
     };
   }, [open, onClose]);
 
+  // Sincroniza estado de tela cheia
+  useEffect(() => {
+    const onFs = () => setIsFull(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", onFs);
+    return () => document.removeEventListener("fullscreenchange", onFs);
+  }, []);
+
+  // Toca a trilha ao abrir (o clique em PLAY REEL é o gesto do usuário)
+  useEffect(() => {
+    if (open && hasMusic && audioRef.current) {
+      audioRef.current.volume = 0.6;
+      audioRef.current.play().catch(() => {});
+    }
+  }, [open, hasMusic]);
+
   if (!open) return null;
 
-  const embed = REEL_VIDEO ? parseEmbed(REEL_VIDEO) : null;
-  const isMp4 = REEL_VIDEO.toLowerCase().endsWith(".mp4");
+  const toggleFull = () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else contentRef.current?.requestFullscreen().catch(() => {});
+  };
+
+  const toggleMute = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    a.muted = !a.muted;
+    setMuted(a.muted);
+    if (!a.muted && a.paused) a.play().catch(() => {});
+  };
 
   return (
     <div
@@ -110,16 +147,44 @@ export function ReelModal({
       onClick={onClose}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-luxe-black/90 p-4 backdrop-blur-md animate-fade-up sm:p-8"
     >
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label="Fechar"
-        className="absolute right-5 top-5 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-luxe-gold/30 text-luxe-gold transition-colors hover:border-luxe-gold hover:bg-luxe-gold hover:text-luxe-black"
-      >
-        <X size={20} strokeWidth={1.5} />
-      </button>
+      {/* Controles */}
+      <div className="absolute right-5 top-5 z-10 flex items-center gap-2">
+        {hasMusic && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleMute();
+            }}
+            aria-label={muted ? "Ativar som" : "Silenciar"}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-luxe-gold/30 text-luxe-gold transition-colors hover:border-luxe-gold hover:bg-luxe-gold hover:text-luxe-black"
+          >
+            {muted ? <VolumeX size={18} strokeWidth={1.5} /> : <Volume2 size={18} strokeWidth={1.5} />}
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFull();
+          }}
+          aria-label={isFull ? "Sair da tela cheia" : "Tela cheia"}
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-luxe-gold/30 text-luxe-gold transition-colors hover:border-luxe-gold hover:bg-luxe-gold hover:text-luxe-black"
+        >
+          {isFull ? <Minimize2 size={18} strokeWidth={1.5} /> : <Maximize2 size={18} strokeWidth={1.5} />}
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Fechar"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-luxe-gold/30 text-luxe-gold transition-colors hover:border-luxe-gold hover:bg-luxe-gold hover:text-luxe-black"
+        >
+          <X size={20} strokeWidth={1.5} />
+        </button>
+      </div>
 
       <div
+        ref={contentRef}
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-5xl overflow-hidden rounded-[18px] border border-luxe-gold/20 bg-luxe-black shadow-[0_40px_120px_rgba(0,0,0,0.6)]"
       >
@@ -138,6 +203,7 @@ export function ReelModal({
             <Montage />
           )}
         </div>
+        {hasMusic && <audio ref={audioRef} src={REEL_MUSIC} loop preload="auto" />}
       </div>
     </div>
   );
