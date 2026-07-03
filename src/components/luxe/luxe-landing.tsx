@@ -22,6 +22,7 @@ import {
   LuxeArrowLink,
   LuxeOrnament,
 } from "@/components/luxe/ui";
+import { ReelModal } from "@/components/luxe/reel-modal";
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -109,6 +110,7 @@ function NavList({
 
 export function LuxeLanding() {
   const [open, setOpen] = useState(false);
+  const [reelOpen, setReelOpen] = useState(false);
   const [active, setActive] = useState("inicio");
 
   // Scroll-spy: destaca o item do menu conforme a seção visível.
@@ -217,8 +219,8 @@ export function LuxeLanding() {
             />
 
             <div className="absolute right-9 top-[34%] z-20 hidden flex-col items-center gap-3 lg:flex">
-              <span className="font-serif-luxe text-xs tracking-[0.3em] text-luxe-gold">PLAY REEL</span>
-              <button type="button" aria-label="Assistir reel" className="flex h-14 w-14 items-center justify-center rounded-full border border-luxe-gold/60 transition-all duration-300 hover:scale-[1.08] hover:border-luxe-gold hover:shadow-[0_0_30px_rgba(212,175,55,0.25)]">
+              <button type="button" onClick={() => setReelOpen(true)} className="font-serif-luxe text-xs tracking-[0.3em] text-luxe-gold transition-colors hover:text-luxe-gold-soft">PLAY REEL</button>
+              <button type="button" onClick={() => setReelOpen(true)} aria-label="Assistir reel" className="flex h-14 w-14 items-center justify-center rounded-full border border-luxe-gold/60 transition-all duration-300 hover:scale-[1.08] hover:border-luxe-gold hover:shadow-[0_0_30px_rgba(212,175,55,0.25)]">
                 <Play size={15} strokeWidth={1} className="ml-0.5 fill-luxe-gold text-luxe-gold" />
               </button>
             </div>
@@ -421,6 +423,9 @@ export function LuxeLanding() {
           </div>
         </div>
       )}
+
+      {/* Modal do reel */}
+      <ReelModal open={reelOpen} onClose={() => setReelOpen(false)} />
     </div>
   );
 }
