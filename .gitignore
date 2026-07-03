@@ -46,3 +46,7 @@ next-env.d.ts
 # as imagens em uso ficam em public/background e as fontes vêm do Google via next/font)
 /src/background/
 /src/fonts/
+
+# PNGs-fonte pesados dos ícones/OG (as versões otimizadas em app/ e public/icons são versionadas)
+/src/logo/favicon-case-ja.png
+/src/logo/opengraph-case-ja.png

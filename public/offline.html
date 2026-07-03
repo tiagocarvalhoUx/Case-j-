@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sem conexão · Case-já</title>
+    <style>
+      :root { color-scheme: light; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: #f8fafc;
+        color: #141c3d;
+        padding: 24px;
+        text-align: center;
+      }
+      .card {
+        max-width: 380px;
+      }
+      .mark {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 18px;
+        background: #eff4ff;
+        color: #2454eb;
+      }
+      h1 { font-size: 1.4rem; margin: 0 0 8px; }
+      p { color: #64748b; line-height: 1.55; margin: 0 0 24px; }
+      button {
+        border: 0;
+        background: #2454eb;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 12px 24px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      button:hover { background: #1c42d7; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="mark" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12 21s-7-4.35-9.5-8.5C1 9.5 2.5 6 6 6c2 0 3.2 1.2 4 2.3C10.8 7.2 12 6 14 6c3.5 0 5 3.5 3.5 6.5C19 16.65 12 21 12 21Z"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+      <h1>Você está offline</h1>
+      <p>
+        Não conseguimos conectar agora. Verifique sua internet e tente
+        novamente — seu planejamento continua salvo.
+      </p>
+      <button onclick="location.reload()">Tentar novamente</button>
+    </div>
+  </body>
+</html>
