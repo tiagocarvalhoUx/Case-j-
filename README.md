@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Case-já — SaaS de Casamentos
 
-## Getting Started
+Plataforma para casais planejarem o casamento com simplicidade: **site
+personalizado**, **lista de presentes convertível em dinheiro**, **cotas de lua
+de mel**, **RSVP/convidados**, fornecedores e cronograma.
 
-First, run the development server:
+> _"Planeje seu casamento com simplicidade."_
+
+## Stack
+
+- **Next.js 16** (App Router) + **React 19** + **TypeScript**
+- **Tailwind CSS v4** (config CSS-first em `src/app/globals.css`)
+- **Supabase** — Postgres, Auth e Storage
+- **Asaas** — pagamentos (Pix, boleto, cartão, split) _(a integrar)_
+- `lucide-react`, `class-variance-authority`, `tailwind-merge`
+
+## Rodando localmente
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.local.example .env.local   # e preencha as chaves do Supabase
+npm run dev                         # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Variáveis necessárias (ver `.env.local.example`):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variável | Descrição |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave publishable/anon |
+| `NEXT_PUBLIC_SITE_URL` | (opcional) URL pública em produção |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Banco de dados
 
-## Learn More
+Aplique a migration `supabase/migrations/0001_init_schema.sql` no **SQL Editor**
+do Supabase. Ela cria as tabelas (`weddings`, `guests`, `gifts`,
+`contributions`) com **RLS** (cada casal só acessa os próprios dados; site e
+presentes só ficam públicos quando publicados).
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `npm run dev` — desenvolvimento
+- `npm run build` — build de produção
+- `npm run lint` — lint
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy
 
-## Deploy on Vercel
+Veja **[DEPLOY.md](DEPLOY.md)** para o passo a passo na Vercel.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Rotas principais
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/` — landing page
+- `/entrar`, `/criar` — autenticação
+- `/painel` — painel do casal (protegido)
+- `/onboarding` — criação do casamento
+- `/site` — editor do site do casamento
+- `/presentes` — lista de presentes
+- `/casamento/[slug]` — site público do casamento

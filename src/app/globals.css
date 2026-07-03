@@ -1,26 +1,186 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   Case-já — Design System / Design Tokens (Tailwind v4)
+   Marca: azul cobalto + azul-marinho + dourado.
+   Princípio: "Planeje seu casamento com simplicidade".
+   ============================================================ */
+
+@theme {
+  /* ---- Cores da marca: Primary (azul cobalto) ---- */
+  --color-primary-50: #eff4ff;
+  --color-primary-100: #dbe6fe;
+  --color-primary-200: #bfd3fe;
+  --color-primary-300: #93b4fd;
+  --color-primary-400: #6090fa;
+  --color-primary-500: #3b6df5;
+  --color-primary-600: #2454eb;
+  --color-primary-700: #1c42d7;
+  --color-primary-800: #1d38ae;
+  --color-primary-900: #1d3389;
+  --color-primary-950: #162156;
+
+  /* ---- Navy (azul-marinho, textos de marca / seções escuras) ---- */
+  --color-navy-50: #f2f4fb;
+  --color-navy-100: #e6eaf7;
+  --color-navy-200: #c7d1ec;
+  --color-navy-300: #9aabdb;
+  --color-navy-400: #6a80c6;
+  --color-navy-500: #475fb0;
+  --color-navy-600: #364a92;
+  --color-navy-700: #2c3b76;
+  --color-navy-800: #1f2a57;
+  --color-navy-900: #141c3d;
+  --color-navy-950: #0c1128;
+
+  /* ---- Gold (dourado, acento / detalhes premium) ---- */
+  --color-gold-50: #faf6ea;
+  --color-gold-100: #f3e9c4;
+  --color-gold-200: #e8d38a;
+  --color-gold-300: #dcbb54;
+  --color-gold-400: #d0a83a;
+  --color-gold-500: #b98f2f;
+  --color-gold-600: #9a7325;
+  --color-gold-700: #7c5b20;
+  --color-gold-800: #664b20;
+  --color-gold-900: #573f1f;
+
+  /* ---- Neutros (slate levemente frio, harmoniza com o azul) ---- */
+  --color-ink-50: #f8fafc;
+  --color-ink-100: #f1f5f9;
+  --color-ink-200: #e2e8f0;
+  --color-ink-300: #cbd5e1;
+  --color-ink-400: #94a3b8;
+  --color-ink-500: #64748b;
+  --color-ink-600: #475569;
+  --color-ink-700: #334155;
+  --color-ink-800: #1e293b;
+  --color-ink-900: #0f172a;
+  --color-ink-950: #020617;
+
+  /* ---- Semânticos ---- */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-foreground: #141c3d;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+
+  --color-success-50: #ecfdf5;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-danger-50: #fef2f2;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-warning-500: #f59e0b;
+
+  /* ---- Tipografia ----
+     Interface/formulários/botões: Inter · Títulos: Playfair Display
+     Logo/assinatura: Great Vibes (font-script) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), ui-serif, Georgia, serif;
+  --font-script: var(--font-great-vibes), "Segoe Script", cursive;
+
+  /* ---- Raios ---- */
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+
+  /* ---- Sombras (suaves, tom azulado) ---- */
+  --shadow-xs: 0 1px 2px 0 rgb(20 28 61 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(20 28 61 / 0.08), 0 1px 2px -1px rgb(20 28 61 / 0.06);
+  --shadow-md: 0 6px 16px -4px rgb(20 28 61 / 0.12), 0 2px 6px -2px rgb(20 28 61 / 0.08);
+  --shadow-lg: 0 18px 40px -12px rgb(20 28 61 / 0.18);
+  --shadow-glow: 0 12px 32px -8px rgb(36 84 235 / 0.35);
+
+  /* ---- Easing / animação ---- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--color-primary-200);
+    color: var(--color-navy-900);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Utilitário: gradiente de texto da marca */
+@utility text-gradient-brand {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-primary-600),
+    var(--color-primary-400) 55%,
+    var(--color-gold-400)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Animações reutilizáveis */
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Zoom lento e sutil (Ken Burns) para o slideshow do hero. A opacidade
+   (crossfade) é controlada via JavaScript no componente. */
+@keyframes ken-burns {
+  from { transform: scale(1.015); }
+  to   { transform: scale(1.075); }
+}
+
+@utility animate-float {
+  animation: float-soft 6s var(--ease-out-soft) infinite;
+}
+
+@utility animate-fade-up {
+  animation: fade-up 0.7s var(--ease-out-soft) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
