@@ -79,11 +79,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#141c3d" },
-  ],
-  colorScheme: "light",
+  // O app inteiro usa o tema Luxury (escuro): barra do navegador acompanha.
+  themeColor: "#050505",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
