@@ -23,6 +23,7 @@ import {
   LuxeOrnament,
 } from "@/components/luxe/ui";
 import { ReelModal } from "@/components/luxe/reel-modal";
+import { GalleryLightbox } from "@/components/luxe/gallery-lightbox";
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -112,6 +113,7 @@ function NavList({
 export function LuxeLanding() {
   const [open, setOpen] = useState(false);
   const [reelOpen, setReelOpen] = useState(false);
+  const [lightbox, setLightbox] = useState<number | null>(null);
   const [active, setActive] = useState("inicio");
 
   // Scroll-spy: destaca o item do menu conforme a seção visível.
@@ -340,10 +342,13 @@ export function LuxeLanding() {
             </div>
             <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-3">
               {portfolio.map((item, i) => (
-                <div
+                <button
                   key={item.src}
+                  type="button"
+                  onClick={() => setLightbox(i)}
+                  aria-label={`Ampliar foto ${i + 1} do portfólio`}
                   className={cn(
-                    "group relative overflow-hidden rounded-[14px]",
+                    "group relative cursor-zoom-in overflow-hidden rounded-[14px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-luxe-gold",
                     item.tall && "md:row-span-2",
                     i === 0 && "col-span-2 md:col-span-1"
                   )}
@@ -359,7 +364,7 @@ export function LuxeLanding() {
                   />
                   <div className="absolute inset-0 bg-luxe-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="pointer-events-none absolute inset-0 rounded-[14px] ring-1 ring-inset ring-luxe-gold/15" />
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -465,6 +470,14 @@ export function LuxeLanding() {
 
       {/* Modal do reel */}
       <ReelModal open={reelOpen} onClose={() => setReelOpen(false)} />
+
+      {/* Lightbox do portfólio */}
+      <GalleryLightbox
+        images={portfolio.map((p) => p.src)}
+        index={lightbox}
+        onClose={() => setLightbox(null)}
+        onNavigate={setLightbox}
+      />
     </div>
   );
 }

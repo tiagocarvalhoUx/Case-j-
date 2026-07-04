@@ -11,11 +11,26 @@ import {
 } from "@/components/luxe/ui";
 import { cn } from "@/lib/utils";
 
-export function RsvpForm({ weddingId }: { weddingId: string }) {
+export function RsvpForm({
+  weddingId,
+  light = false,
+}: {
+  weddingId: string;
+  light?: boolean;
+}) {
   const [attending, setAttending] = useState<"confirmed" | "declined">("confirmed");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+
+  // Overrides p/ tema claro (tailwind-merge resolve os conflitos)
+  const cardCls = light
+    ? "border-black/10 bg-white shadow-sm"
+    : "border-luxe-gold/15 bg-luxe-card/70";
+  const labelCls = light ? "text-[#6b6257]" : "";
+  const inputCls = light
+    ? "border-black/15 bg-[#faf7f2] text-[#2b2620] placeholder:text-black/35 focus:border-[#9a7325] focus:ring-[rgba(154,115,37,0.15)]"
+    : "";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -56,14 +71,19 @@ export function RsvpForm({ weddingId }: { weddingId: string }) {
 
   if (done) {
     return (
-      <div className="mx-auto max-w-md rounded-[18px] border border-luxe-gold/15 bg-luxe-card/70 p-10 text-center">
-        <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full border border-luxe-gold/30 text-luxe-gold">
-          <Heart size={22} className="fill-luxe-gold" />
+      <div className={cn("mx-auto max-w-md rounded-[18px] border p-10 text-center", cardCls)}>
+        <span
+          className={cn(
+            "mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full border",
+            light ? "border-[#9a7325]/40 text-[#9a7325]" : "border-luxe-gold/30 text-luxe-gold"
+          )}
+        >
+          <Heart size={22} className="fill-current" />
         </span>
-        <h3 className="mt-5 font-serif-luxe text-2xl text-luxe-cream">
+        <h3 className={cn("mt-5 font-serif-luxe text-2xl", light ? "text-[#2b2620]" : "text-luxe-cream")}>
           {attending === "confirmed" ? "Presença confirmada!" : "Recebemos seu recado"}
         </h3>
-        <p className="mt-2 text-luxe-muted">
+        <p className={cn("mt-2", light ? "text-[#6b6257]" : "text-luxe-muted")}>
           {attending === "confirmed"
             ? "Que alegria! Mal podemos esperar para celebrar com você."
             : "Sentiremos sua falta, mas obrigado por avisar."}
@@ -75,7 +95,7 @@ export function RsvpForm({ weddingId }: { weddingId: string }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto max-w-lg rounded-[18px] border border-luxe-gold/15 bg-luxe-card/70 p-6 sm:p-8"
+      className={cn("mx-auto max-w-lg rounded-[18px] border p-6 sm:p-8", cardCls)}
     >
       {error && (
         <div className="mb-5 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-300">
@@ -96,8 +116,12 @@ export function RsvpForm({ weddingId }: { weddingId: string }) {
             className={cn(
               "rounded-xl border py-3 font-serif-luxe tracking-wide transition-colors",
               attending === o.key
-                ? "border-luxe-gold bg-luxe-gold/10 text-luxe-gold"
-                : "border-white/10 text-luxe-muted hover:border-white/25"
+                ? light
+                  ? "border-[#9a7325] bg-[#9a7325]/10 text-[#9a7325]"
+                  : "border-luxe-gold bg-luxe-gold/10 text-luxe-gold"
+                : light
+                  ? "border-black/15 text-[#6b6257] hover:border-black/30"
+                  : "border-white/10 text-luxe-muted hover:border-white/25"
             )}
           >
             {o.label}
@@ -107,26 +131,26 @@ export function RsvpForm({ weddingId }: { weddingId: string }) {
 
       <div className="mt-5 space-y-5">
         <div>
-          <LuxeLabel htmlFor="rsvp-name">Seu nome</LuxeLabel>
-          <LuxeInput id="rsvp-name" name="name" placeholder="Nome e sobrenome" required />
+          <LuxeLabel htmlFor="rsvp-name" className={labelCls}>Seu nome</LuxeLabel>
+          <LuxeInput id="rsvp-name" name="name" placeholder="Nome e sobrenome" required className={inputCls} />
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <LuxeLabel htmlFor="rsvp-email">E-mail (opcional)</LuxeLabel>
-            <LuxeInput id="rsvp-email" name="email" type="email" placeholder="voce@email.com" />
+            <LuxeLabel htmlFor="rsvp-email" className={labelCls}>E-mail (opcional)</LuxeLabel>
+            <LuxeInput id="rsvp-email" name="email" type="email" placeholder="voce@email.com" className={inputCls} />
           </div>
           {attending === "confirmed" && (
             <div>
-              <LuxeLabel htmlFor="rsvp-size">Nº de pessoas</LuxeLabel>
-              <LuxeInput id="rsvp-size" name="party_size" type="number" min={1} defaultValue={1} />
+              <LuxeLabel htmlFor="rsvp-size" className={labelCls}>Nº de pessoas</LuxeLabel>
+              <LuxeInput id="rsvp-size" name="party_size" type="number" min={1} defaultValue={1} className={inputCls} />
             </div>
           )}
         </div>
 
         <div>
-          <LuxeLabel htmlFor="rsvp-msg">Deixe um recado (opcional)</LuxeLabel>
-          <LuxeTextarea id="rsvp-msg" name="message" placeholder="Uma mensagem carinhosa para o casal..." className="min-h-20" />
+          <LuxeLabel htmlFor="rsvp-msg" className={labelCls}>Deixe um recado (opcional)</LuxeLabel>
+          <LuxeTextarea id="rsvp-msg" name="message" placeholder="Uma mensagem carinhosa para o casal..." className={cn("min-h-20", inputCls)} />
         </div>
 
         <LuxeButton type="submit" size="lg" className="w-full" disabled={loading}>

@@ -111,7 +111,7 @@ export function SiteEditor({ wedding }: { wedding: Wedding }) {
           <div>
             <LuxeLabel>Tema visual</LuxeLabel>
             <input type="hidden" name="theme" value={theme} />
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {themeList.map((t) => (
                 <button
                   key={t.key}
