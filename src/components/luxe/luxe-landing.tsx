@@ -50,12 +50,13 @@ const services = [
 ];
 
 const portfolio = [
-  "/background/hero-luxe.jpg",
-  "/background/wedding-1.jpg",
-  "/background/wedding-2.jpg",
-  "/background/wedding-4.jpg",
-  "/background/wedding-3.jpg",
-  "/background/wedding-6.avif",
+  { src: "/background/hero-luxe.jpg", tall: true },
+  { src: "/background/wedding-8.jpg", tall: true },
+  { src: "/background/wedding-1.jpg", tall: false },
+  { src: "/background/wedding-2.jpg", tall: false },
+  { src: "/background/wedding-4.jpg", tall: false },
+  { src: "/background/wedding-3.jpg", tall: false },
+  { src: "/background/wedding-6.avif", tall: false },
 ];
 
 const testimonials = [
@@ -338,9 +339,24 @@ export function LuxeLanding() {
               </h2>
             </div>
             <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-3">
-              {portfolio.map((src, i) => (
-                <div key={src} className={cn("group relative overflow-hidden rounded-[14px]", i === 0 && "col-span-2 md:col-span-1 md:row-span-2")}>
-                  <img src={src} alt="Casamento Case-já" className={cn("h-full w-full object-cover transition-transform duration-500 group-hover:scale-105", i === 0 ? "aspect-[3/4] md:aspect-auto md:h-full" : "aspect-square")} />
+              {portfolio.map((item, i) => (
+                <div
+                  key={item.src}
+                  className={cn(
+                    "group relative overflow-hidden rounded-[14px]",
+                    item.tall && "md:row-span-2",
+                    i === 0 && "col-span-2 md:col-span-1"
+                  )}
+                >
+                  <img
+                    src={item.src}
+                    alt="Casamento Case-já"
+                    loading="lazy"
+                    className={cn(
+                      "h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
+                      item.tall ? "aspect-[3/4] md:aspect-auto md:h-full" : "aspect-square"
+                    )}
+                  />
                   <div className="absolute inset-0 bg-luxe-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="pointer-events-none absolute inset-0 rounded-[14px] ring-1 ring-inset ring-luxe-gold/15" />
                 </div>
