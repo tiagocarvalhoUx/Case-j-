@@ -417,8 +417,13 @@ export function LuxeLanding() {
               <a href="mailto:contato@case-ja.com.br" className="inline-flex items-center gap-2 hover:text-luxe-gold">
                 <Mail size={15} strokeWidth={1.5} /> contato@case-ja.com.br
               </a>
-              <a href="tel:+5511999999999" className="inline-flex items-center gap-2 hover:text-luxe-gold">
-                <Phone size={15} strokeWidth={1.5} /> (11) 99999-9999
+              <a
+                href="https://wa.me/5518981142927?text=Ol%C3%A1!%20Quero%20planejar%20meu%20casamento%20com%20o%20Case-j%C3%A1%20%F0%9F%92%8D"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 hover:text-luxe-gold"
+              >
+                <Phone size={15} strokeWidth={1.5} /> (18) 98114-2927
               </a>
             </div>
           </div>
