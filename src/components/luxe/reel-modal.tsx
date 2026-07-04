@@ -20,10 +20,10 @@ const REEL_MUSIC = "";
 
 const MONTAGE = [
   "/background/hero-luxe.jpg",
-  "/background/wedding-1.png",
-  "/background/wedding-4.png",
-  "/background/wedding-2.png",
-  "/background/wedding-3.png",
+  "/background/wedding-1.jpg",
+  "/background/wedding-4.jpg",
+  "/background/wedding-2.jpg",
+  "/background/wedding-3.jpg",
   "/background/wedding-6.avif",
 ];
 

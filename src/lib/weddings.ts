@@ -1,17 +1,17 @@
-import { createClient } from "@/lib/supabase/server";
+import { cache } from "react";
+import { createClient, getUser } from "@/lib/supabase/server";
 import type { Wedding } from "@/lib/supabase/types";
 
 /**
  * Retorna o casamento do usuário autenticado (ou null se ainda não criou).
  * Usa o client server (respeita RLS: só enxerga o próprio).
+ * Memoizado por request: layout e página compartilham o resultado.
  */
-export async function getUserWedding(): Promise<Wedding | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export const getUserWedding = cache(async (): Promise<Wedding | null> => {
+  const user = await getUser();
   if (!user) return null;
 
+  const supabase = await createClient();
   const { data } = await supabase
     .from("weddings")
     .select("*")
@@ -21,7 +21,7 @@ export async function getUserWedding(): Promise<Wedding | null> {
     .maybeSingle();
 
   return data ?? null;
-}
+});
 
 /** Gera um slug amigável a partir dos nomes do casal. */
 export function slugify(input: string): string {

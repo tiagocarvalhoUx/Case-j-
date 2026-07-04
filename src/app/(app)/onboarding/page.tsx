@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/supabase/server";
 import { getUserWedding } from "@/lib/weddings";
 import { Container } from "@/components/ui/container";
 import { LuxeCard, LuxeEyebrow, LuxeTitle } from "@/components/luxe/ui";
@@ -14,10 +14,7 @@ export default async function OnboardingPage() {
   const existing = await getUserWedding();
   if (existing) redirect("/painel");
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
   const defaultCouple =
     (user?.user_metadata?.couple_names as string | undefined) || "";
 

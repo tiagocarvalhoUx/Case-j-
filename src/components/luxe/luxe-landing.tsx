@@ -51,10 +51,10 @@ const services = [
 
 const portfolio = [
   "/background/hero-luxe.jpg",
-  "/background/wedding-1.png",
-  "/background/wedding-2.png",
-  "/background/wedding-4.png",
-  "/background/wedding-3.png",
+  "/background/wedding-1.jpg",
+  "/background/wedding-2.jpg",
+  "/background/wedding-4.jpg",
+  "/background/wedding-3.jpg",
   "/background/wedding-6.avif",
 ];
 
@@ -275,7 +275,7 @@ export function LuxeLanding() {
         <section id="sobre" className="scroll-mt-20 px-7 py-24 sm:px-12 lg:px-20 lg:py-32">
           <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
             <div className="relative">
-              <img src="/background/wedding-4.png" alt="Casamento planejado pela Case-já" className="aspect-[4/5] w-full rounded-[18px] object-cover" />
+              <img src="/background/wedding-4.jpg" alt="Casamento planejado pela Case-já" className="aspect-[4/5] w-full rounded-[18px] object-cover" />
               <div className="pointer-events-none absolute inset-0 rounded-[18px] ring-1 ring-inset ring-luxe-gold/20" />
             </div>
             <div>
@@ -376,7 +376,7 @@ export function LuxeLanding() {
 
         {/* ===== CONTATO ===== */}
         <section id="contato" className="relative scroll-mt-20 overflow-hidden px-7 py-28 sm:px-12 lg:px-20 lg:py-36">
-          <img src="/background/wedding-1.png" alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <img src="/background/wedding-1.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
           <div className="absolute inset-0 bg-luxe-black/85" />
           <div className="relative mx-auto max-w-2xl text-center">
             <div className="flex justify-center">
