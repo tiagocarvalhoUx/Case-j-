@@ -14,11 +14,13 @@ import { cn } from "@/lib/utils";
  */
 export function GalleryLightbox({
   images,
+  captions,
   index,
   onClose,
   onNavigate,
 }: {
   images: string[];
+  captions?: (string | null)[];
   index: number | null;
   onClose: () => void;
   onNavigate: (next: number) => void;
@@ -130,11 +132,21 @@ export function GalleryLightbox({
         <ChevronRight size={22} strokeWidth={1.25} />
       </button>
 
-      {/* Contador */}
-      <p className="absolute bottom-6 left-1/2 -translate-x-1/2 font-serif-luxe text-sm tracking-[0.3em]">
-        <span className="text-luxe-gold">{String(index + 1).padStart(2, "0")}</span>
-        <span className="text-luxe-cream/50"> / {String(images.length).padStart(2, "0")}</span>
-      </p>
+      {/* Legenda + contador */}
+      <div className="absolute inset-x-0 bottom-5 flex flex-col items-center gap-1.5 px-16">
+        {captions?.[index] && (
+          <p
+            key={`cap-${index}`}
+            className="max-w-xl text-center font-serif-luxe text-base italic text-luxe-cream/90 animate-lightbox-in"
+          >
+            {captions[index]}
+          </p>
+        )}
+        <p className="font-serif-luxe text-sm tracking-[0.3em]">
+          <span className="text-luxe-gold">{String(index + 1).padStart(2, "0")}</span>
+          <span className="text-luxe-cream/50"> / {String(images.length).padStart(2, "0")}</span>
+        </p>
+      </div>
     </div>
   );
 }

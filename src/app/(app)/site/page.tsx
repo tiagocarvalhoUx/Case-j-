@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
 import { getUserWedding } from "@/lib/weddings";
 import { Container } from "@/components/ui/container";
 import { SiteEditor } from "./site-editor";
+import { GalleryManager } from "./gallery-manager";
 
 export const metadata: Metadata = {
   title: "Editor do site",
@@ -13,6 +15,15 @@ export const metadata: Metadata = {
 export default async function SitePage() {
   const wedding = await getUserWedding();
   if (!wedding) redirect("/onboarding");
+
+  const supabase = await createClient();
+  const { data: photosData } = await supabase
+    .from("photos")
+    .select("*")
+    .eq("wedding_id", wedding.id)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+  const photos = photosData ?? [];
 
   return (
     <Container className="py-12">
@@ -34,6 +45,7 @@ export default async function SitePage() {
       </div>
 
       <SiteEditor wedding={wedding} />
+      <GalleryManager photos={photos} />
     </Container>
   );
 }

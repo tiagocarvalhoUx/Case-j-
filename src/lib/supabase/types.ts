@@ -214,6 +214,33 @@ export interface Database {
           }
         ];
       };
+      photos: {
+        Row: {
+          id: string;
+          wedding_id: string;
+          url: string;
+          caption: string | null;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          wedding_id: string;
+          url: string;
+          caption?: string | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["photos"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "photos_wedding_id_fkey";
+            columns: ["wedding_id"];
+            referencedRelation: "weddings";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       vendors: {
         Row: {
           id: string;
@@ -287,3 +314,4 @@ export type Gift = Tables<"gifts">;
 export type Contribution = Tables<"contributions">;
 export type Task = Tables<"tasks">;
 export type Vendor = Tables<"vendors">;
+export type Photo = Tables<"photos">;

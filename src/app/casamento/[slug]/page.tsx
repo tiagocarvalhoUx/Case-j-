@@ -5,6 +5,7 @@ import { CalendarDays, MapPin, Gift, Plane, Heart, PiggyBank } from "lucide-reac
 import { createClient } from "@/lib/supabase/server";
 import { LuxeOrnament } from "@/components/luxe/ui";
 import { RsvpForm } from "./rsvp-form";
+import { WeddingGallery } from "./wedding-gallery";
 import { getTheme } from "@/lib/themes";
 import { cn } from "@/lib/utils";
 import type { Gift as GiftRow, Wedding } from "@/lib/supabase/types";
@@ -68,13 +69,22 @@ export default async function PublicWeddingPage({
   if (!wedding) notFound();
 
   const supabase = await createClient();
-  const { data: giftsData } = await supabase
-    .from("gifts")
-    .select("*")
-    .eq("wedding_id", wedding.id)
-    .eq("active", true)
-    .order("sort_order", { ascending: true });
+  const [{ data: giftsData }, { data: photosData }] = await Promise.all([
+    supabase
+      .from("gifts")
+      .select("*")
+      .eq("wedding_id", wedding.id)
+      .eq("active", true)
+      .order("sort_order", { ascending: true }),
+    supabase
+      .from("photos")
+      .select("*")
+      .eq("wedding_id", wedding.id)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true }),
+  ]);
   const gifts = (giftsData ?? []) as GiftRow[];
+  const photos = photosData ?? [];
 
   const dateLabel = formatDate(wedding.wedding_date);
   const countdown = daysUntil(wedding.wedding_date);
@@ -153,6 +163,31 @@ export default async function PublicWeddingPage({
           >
             {wedding.welcome_message}
           </p>
+        </section>
+      )}
+
+      {/* GALERIA */}
+      {photos.length > 0 && (
+        <section
+          id="galeria"
+          className={cn("border-t py-20", light ? "border-black/10" : "border-luxe-gold/10")}
+        >
+          <div className="mx-auto max-w-5xl px-6">
+            <div className="text-center">
+              <p className={cn("font-serif-luxe text-xs uppercase tracking-[0.4em]", theme.textDark)}>
+                Galeria
+              </p>
+              <h2
+                className={cn(
+                  "mt-4 font-serif-luxe text-4xl font-light",
+                  light ? "text-[#2b2620]" : "text-luxe-cream"
+                )}
+              >
+                Nossos momentos
+              </h2>
+            </div>
+            <WeddingGallery photos={photos} light={light} />
+          </div>
         </section>
       )}
 

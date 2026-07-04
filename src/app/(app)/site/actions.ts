@@ -48,6 +48,46 @@ export async function updateWeddingSite(
   return { success: true };
 }
 
+/** Adiciona uma foto à galeria do casal. */
+export async function addPhoto(
+  _prev: SiteState,
+  formData: FormData
+): Promise<SiteState> {
+  const wedding = await getUserWedding();
+  if (!wedding) redirect("/onboarding");
+
+  const url = String(formData.get("url") || "").trim();
+  if (!/^https?:\/\/.+/i.test(url)) {
+    return { error: "Cole uma URL válida de imagem (https://...)." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("photos").insert({
+    wedding_id: wedding.id,
+    url,
+    caption: String(formData.get("caption") || "").trim() || null,
+  });
+
+  if (error) return { error: "Não foi possível adicionar a foto." };
+
+  revalidatePath("/site");
+  revalidatePath(`/casamento/${wedding.slug}`);
+  return { success: true };
+}
+
+/** Remove uma foto da galeria. */
+export async function deletePhoto(formData: FormData): Promise<void> {
+  const wedding = await getUserWedding();
+  if (!wedding) redirect("/onboarding");
+
+  const id = String(formData.get("id") || "");
+  const supabase = await createClient();
+  await supabase.from("photos").delete().eq("id", id).eq("wedding_id", wedding.id);
+
+  revalidatePath("/site");
+  revalidatePath(`/casamento/${wedding.slug}`);
+}
+
 /** Publica ou despublica o site (alterna o estado atual). */
 export async function togglePublish(): Promise<void> {
   const wedding = await getUserWedding();
