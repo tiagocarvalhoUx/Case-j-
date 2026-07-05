@@ -16,6 +16,7 @@ export type RsvpStatus = "pending" | "confirmed" | "declined";
 export type GiftType = "fixed" | "quota";
 export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 export type VendorStatus = "researching" | "quoted" | "hired" | "paid";
+export type PlanTier = "free" | "essential" | "premium";
 
 export interface Database {
   public: {
@@ -33,6 +34,9 @@ export interface Database {
           cover_image_url: string | null;
           theme: string;
           published: boolean;
+          plan: PlanTier;
+          trial_ends_at: string | null;
+          plan_expires_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -48,6 +52,9 @@ export interface Database {
           cover_image_url?: string | null;
           theme?: string;
           published?: boolean;
+          plan?: PlanTier;
+          trial_ends_at?: string | null;
+          plan_expires_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -146,6 +153,7 @@ export interface Database {
           status: PaymentStatus;
           payment_method: string | null;
           asaas_payment_id: string | null;
+          fee_rate: number | null;
           created_at: string;
           paid_at: string | null;
         };
@@ -160,6 +168,7 @@ export interface Database {
           status?: PaymentStatus;
           payment_method?: string | null;
           asaas_payment_id?: string | null;
+          fee_rate?: number | null;
           created_at?: string;
           paid_at?: string | null;
         };

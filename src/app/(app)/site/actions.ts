@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getUserWedding } from "@/lib/weddings";
 import { themes, type ThemeKey } from "@/lib/themes";
+import { getPlan, photoLimit, isThemeAllowed } from "@/lib/plans";
 
 export type SiteState = { success?: boolean; error?: string };
 
@@ -23,6 +24,13 @@ export async function updateWeddingSite(
 
   const themeInput = String(formData.get("theme") || "classic");
   const theme: ThemeKey = themeInput in themes ? (themeInput as ThemeKey) : "classic";
+
+  // Gate por plano: temas premium exigem plano pago (ou teste grátis).
+  if (theme !== wedding.theme && !isThemeAllowed(wedding, theme)) {
+    return {
+      error: `O tema “${themes[theme].name}” está disponível nos planos pagos. Veja em /planos.`,
+    };
+  }
 
   const supabase = await createClient();
   const { error } = await supabase
@@ -62,6 +70,21 @@ export async function addPhoto(
   }
 
   const supabase = await createClient();
+
+  // Gate por plano: limite de fotos na galeria.
+  const limit = photoLimit(wedding);
+  if (limit !== null) {
+    const { count } = await supabase
+      .from("photos")
+      .select("*", { count: "exact", head: true })
+      .eq("wedding_id", wedding.id);
+    if ((count ?? 0) >= limit) {
+      return {
+        error: `Seu plano ${getPlan(wedding).name} permite até ${limit} fotos. Assine um plano superior em /planos para adicionar mais.`,
+      };
+    }
+  }
+
   const { error } = await supabase.from("photos").insert({
     wedding_id: wedding.id,
     url,

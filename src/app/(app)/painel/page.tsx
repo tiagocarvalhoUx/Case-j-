@@ -10,11 +10,19 @@ import {
   ArrowRight,
   CalendarDays,
   MapPin,
+  Sparkles,
+  Crown,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getUserWedding } from "@/lib/weddings";
+import {
+  PLANS,
+  getEffectivePlan,
+  isTrialActive,
+  trialDaysLeft,
+} from "@/lib/plans";
 import { Container } from "@/components/ui/container";
-import { LuxeCard, LuxeBadge, LuxeEyebrow } from "@/components/luxe/ui";
+import { LuxeCard, LuxeBadge, LuxeEyebrow, luxeButton } from "@/components/luxe/ui";
 
 export const metadata: Metadata = {
   title: "Painel",
@@ -74,6 +82,10 @@ export default async function PainelPage() {
   const dateLabel = formatDate(wedding.wedding_date);
   const countdown = daysUntil(wedding.wedding_date);
 
+  const effectivePlan = PLANS[getEffectivePlan(wedding)];
+  const trialing = isTrialActive(wedding);
+  const trialLeft = trialDaysLeft(wedding);
+
   const stats = [
     { label: "Convidados", value: String(guestsCount) },
     { label: "Confirmados", value: String(confirmedCount) },
@@ -116,6 +128,31 @@ export default async function PainelPage() {
           </span>
         </div>
       </div>
+
+      {/* Plano / teste grátis */}
+      <LuxeCard className="mt-8 flex flex-col gap-4 border-luxe-gold/25 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3">
+          <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-luxe-gold/25 text-luxe-gold">
+            {trialing ? <Sparkles size={18} strokeWidth={1.5} /> : <Crown size={18} strokeWidth={1.5} />}
+          </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <p className="font-serif-luxe text-lg text-luxe-cream">
+                Plano {effectivePlan.name}
+              </p>
+              {trialing && <LuxeBadge variant="gold">Teste grátis</LuxeBadge>}
+            </div>
+            <p className="mt-0.5 text-sm text-luxe-muted">
+              {trialing
+                ? `Você tem o Premium liberado — faltam ${trialLeft} ${trialLeft === 1 ? "dia" : "dias"}. Assine para manter todos os recursos.`
+                : `Taxa de presente de ${effectivePlan.giftFeeLabel}. Veja como diminuir e liberar mais recursos.`}
+            </p>
+          </div>
+        </div>
+        <Link href="/planos" className={`${luxeButton({ variant: "outline", size: "sm" })} shrink-0`}>
+          Ver planos
+        </Link>
+      </LuxeCard>
 
       {/* Estatísticas */}
       <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">

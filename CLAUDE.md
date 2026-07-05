@@ -112,6 +112,17 @@ Asaas com webhook (validado ponta a ponta em produção) → **deploy na Vercel*
 pela data) e **Fornecedores** (`/fornecedores`, pipeline + custos) — migration
 0003 (tasks/vendors).
 
-Pendências do usuário: aplicar migrations 0002/0003 no SQL Editor; configurar
-URLs de Auth do Supabase para https://case-ja.vercel.app; rotacionar chaves
-Asaas/service-role expostas em chat.
+Feito também: **planos & teste grátis** (migration 0006) — catálogo em
+`src/lib/plans.ts` (free/essential/premium com taxa de presente regressiva
+4,99%/3,99%/2,99%, limites de convidados/fotos/temas); trial de 7 dias (Premium
+liberado) no onboarding; página pública `/planos`; banner de plano no painel;
+gates server-side (fotos, convidados, temas) e **taxa dinâmica gravada em
+`contributions.fee_rate`** no checkout conforme o plano do casal.
+
+Pendências do usuário: aplicar migrations 0002/0003/**0006** no SQL Editor;
+configurar URLs de Auth do Supabase para https://case-ja.vercel.app; rotacionar
+chaves Asaas/service-role expostas em chat.
+
+Pendência de produto: **cobrança self-service do plano** (item 4 — ativar plano
+pago via Asaas + `plan`/`plan_expires_at` gravados pelo service role). Hoje o
+botão "Assinar" em `/planos` abre o WhatsApp (contratação assistida).

@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { createCustomer, createPayment } from "@/lib/asaas";
+import { getGiftFeeRate } from "@/lib/plans";
 
 export type CheckoutState = { url?: string; error?: string };
 
@@ -35,11 +36,14 @@ export async function startGiftCheckout(
 
   const { data: wedding } = await supabase
     .from("weddings")
-    .select("couple_names, published")
+    .select("couple_names, published, plan, trial_ends_at, plan_expires_at")
     .eq("id", gift.wedding_id)
     .maybeSingle();
   if (!wedding || !wedding.published)
     return { error: "Este casamento não está disponível." };
+
+  // Taxa da plataforma conforme o plano do casal no momento (2,99%–4,99%).
+  const feeRate = getGiftFeeRate(wedding);
 
   try {
     // 1) Cliente + cobrança no Asaas (página de pagamento hospedada).
@@ -61,6 +65,7 @@ export async function startGiftCheckout(
       amount: payment.value,
       status: "pending",
       asaas_payment_id: payment.id,
+      fee_rate: feeRate,
     });
 
     return { url: payment.invoiceUrl };

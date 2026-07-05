@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/weddings";
+import { TRIAL_DAYS } from "@/lib/plans";
 
 export type OnboardingState = { error?: string };
 
@@ -30,6 +31,11 @@ export async function createWedding(
 
   const base = slugify(coupleNames);
 
+  // Teste grátis de 7 dias (Premium liberado) a partir de agora.
+  const trialEndsAt = new Date(
+    Date.now() + TRIAL_DAYS * 86_400_000
+  ).toISOString();
+
   // Tenta inserir; em colisão de slug (unique_violation 23505) tenta de novo.
   for (let attempt = 0; attempt < 5; attempt++) {
     const slug =
@@ -43,6 +49,8 @@ export async function createWedding(
       slug,
       wedding_date: weddingDate || null,
       city: city || null,
+      plan: "free",
+      trial_ends_at: trialEndsAt,
     });
 
     if (!error) {

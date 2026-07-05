@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getUserWedding } from "@/lib/weddings";
+import { getPlan, guestLimit } from "@/lib/plans";
 import type { RsvpStatus } from "@/lib/supabase/types";
 
 export type GuestState = { success?: boolean; error?: string };
@@ -24,6 +25,21 @@ export async function addGuest(
   const partySize = Math.max(1, Number(formData.get("party_size") || 1));
 
   const supabase = await createClient();
+
+  // Gate por plano: limite de convidados no plano Grátis.
+  const limit = guestLimit(wedding);
+  if (limit !== null) {
+    const { count } = await supabase
+      .from("guests")
+      .select("*", { count: "exact", head: true })
+      .eq("wedding_id", wedding.id);
+    if ((count ?? 0) >= limit) {
+      return {
+        error: `Seu plano ${getPlan(wedding).name} permite até ${limit} convidados. Assine um plano superior em /planos para adicionar mais.`,
+      };
+    }
+  }
+
   const { error } = await supabase.from("guests").insert({
     wedding_id: wedding.id,
     name,
