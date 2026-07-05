@@ -75,14 +75,29 @@ export async function addPhoto(
   return { success: true };
 }
 
-/** Remove uma foto da galeria. */
+/** Remove uma foto da galeria (e o arquivo do Storage, se for nosso). */
 export async function deletePhoto(formData: FormData): Promise<void> {
   const wedding = await getUserWedding();
   if (!wedding) redirect("/onboarding");
 
   const id = String(formData.get("id") || "");
   const supabase = await createClient();
+
+  const { data: photo } = await supabase
+    .from("photos")
+    .select("url")
+    .eq("id", id)
+    .eq("wedding_id", wedding.id)
+    .maybeSingle();
+
   await supabase.from("photos").delete().eq("id", id).eq("wedding_id", wedding.id);
+
+  // Se a foto foi enviada por upload (bucket "photos"), apaga o arquivo também.
+  const marker = "/storage/v1/object/public/photos/";
+  if (photo?.url.includes(marker)) {
+    const path = decodeURIComponent(photo.url.split(marker)[1] ?? "");
+    if (path) await supabase.storage.from("photos").remove([path]);
+  }
 
   revalidatePath("/site");
   revalidatePath(`/casamento/${wedding.slug}`);
