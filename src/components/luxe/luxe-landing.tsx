@@ -24,6 +24,7 @@ import {
 } from "@/components/luxe/ui";
 import { ReelModal } from "@/components/luxe/reel-modal";
 import { GalleryLightbox } from "@/components/luxe/gallery-lightbox";
+import { PlansGrid } from "@/components/luxe/plans-grid";
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -32,8 +33,9 @@ const navItems = [
   { n: "02", id: "sobre", label: "SOBRE" },
   { n: "03", id: "servicos", label: "SERVIÇOS" },
   { n: "04", id: "portfolio", label: "PORTFÓLIO" },
-  { n: "05", id: "depoimentos", label: "DEPOIMENTOS" },
-  { n: "06", id: "contato", label: "CONTATO" },
+  { n: "05", id: "planos", label: "PLANOS" },
+  { n: "06", id: "depoimentos", label: "DEPOIMENTOS" },
+  { n: "07", id: "contato", label: "CONTATO" },
 ];
 
 const stats = [
@@ -252,7 +254,7 @@ export function LuxeLanding() {
               </a>
               <span className="font-serif-luxe text-lg tracking-[0.25em]">
                 <span className="text-luxe-gold">01</span>
-                <span className="text-luxe-cream/50"> / 06</span>
+                <span className="text-luxe-cream/50"> / 0{navItems.length}</span>
               </span>
               <a href="#sobre" aria-label="Próximo" className="text-luxe-cream/60 transition-colors hover:text-luxe-gold">
                 <ArrowRight size={22} strokeWidth={1} />
@@ -367,6 +369,33 @@ export function LuxeLanding() {
                 </button>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ===== PLANOS ===== */}
+        <section id="planos" className="scroll-mt-20 px-7 py-24 sm:px-12 lg:px-20 lg:py-32">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center">
+              <div className="flex justify-center">
+                <LuxeEyebrow>Planos & preços</LuxeEyebrow>
+              </div>
+              <h2 className="mt-6 font-serif-luxe text-4xl font-light text-luxe-cream sm:text-5xl">
+                Comece grátis. Pague só quando pedir mais.
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-luxe-muted">
+                Todo casal começa com <span className="text-luxe-cream">7 dias
+                de Premium liberado</span>. A maior parte da nossa receita vem de
+                uma pequena taxa sobre os presentes — não da mensalidade.
+              </p>
+            </div>
+            <div className="mt-14">
+              <PlansGrid />
+            </div>
+            <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-luxe-muted/70">
+              A taxa de presente é descontada automaticamente de cada presente
+              recebido — quanto melhor o plano, menor a taxa. Você pode repassar
+              essa taxa ao convidado ou assumi-la, como preferir.
+            </p>
           </div>
         </section>
 

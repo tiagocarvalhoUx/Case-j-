@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { LogOut, Sparkles } from "lucide-react";
 import { createClient, getUser } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/container";
 import { LuxePage } from "@/components/luxe/ui";
@@ -33,6 +33,12 @@ export default async function AppLayout({
             <img src="/luxe/logo-casaja.png" alt="Case-já" className="w-16" />
           </Link>
           <div className="flex items-center gap-5">
+            <Link
+              href="/planos"
+              className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-luxe-muted transition-colors hover:text-luxe-gold"
+            >
+              <Sparkles size={14} strokeWidth={1.5} /> Planos
+            </Link>
             <span className="hidden font-serif-luxe text-sm tracking-[0.15em] text-luxe-cream/80 sm:inline">
               {coupleNames}
             </span>
