@@ -84,7 +84,7 @@ export default async function PainelPage() {
   const modules = [
     { icon: Globe, title: "Site do casamento", desc: "Personalize tema, história e informações.", status: wedding.published ? "Publicado" : "Rascunho", href: "/site" },
     { icon: Gift, title: "Lista de presentes", desc: "Presentes em dinheiro e cotas de lua de mel.", status: giftsCount > 0 ? `${giftsCount} itens` : "Adicionar", href: "/presentes" },
-    { icon: Users, title: "Convidados & RSVP", desc: "Gerencie a lista e envie convites pelo WhatsApp.", status: guestsCount > 0 ? `${guestsCount} convidados` : "Adicionar", href: "/convidados" },
+    { icon: Users, title: "Convidados & Confirmações", desc: "Gerencie a lista e envie convites pelo WhatsApp.", status: guestsCount > 0 ? `${guestsCount} convidados` : "Adicionar", href: "/convidados" },
     { icon: CalendarCheck, title: "Cronograma", desc: "Checklist inteligente para não esquecer nada.", status: tasksCount > 0 ? `${tasksDone}/${tasksCount} tarefas` : "Começar", href: "/cronograma" },
     { icon: Store, title: "Fornecedores", desc: "Contatos, orçamentos e custo do casamento.", status: vendorsCount > 0 ? `${vendorsCount} fornecedores` : "Adicionar", href: "/fornecedores" },
   ];

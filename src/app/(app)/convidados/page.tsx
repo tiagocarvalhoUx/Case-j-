@@ -9,7 +9,7 @@ import { GuestsManager } from "./guests-manager";
 import type { Guest } from "@/lib/supabase/types";
 
 export const metadata: Metadata = {
-  title: "Convidados & RSVP",
+  title: "Convidados & Confirmações",
 };
 
 export default async function ConvidadosPage() {
@@ -35,7 +35,7 @@ export default async function ConvidadosPage() {
 
       <div className="mt-5 mb-9">
         <h1 className="font-serif-luxe text-4xl font-light text-luxe-cream">
-          Convidados &amp; RSVP
+          Convidados &amp; Confirmações
         </h1>
         <p className="mt-1 text-luxe-muted">
           Gerencie a lista, acompanhe confirmações e envie convites pelo

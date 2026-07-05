@@ -46,7 +46,7 @@ export const WEDDING_CHECKLIST: ChecklistItem[] = [
   { monthsBefore: 2, phase: "2 meses antes", title: "Teste de cabelo e maquiagem" },
   { monthsBefore: 2, phase: "2 meses antes", title: "Dar entrada na documentação do casamento civil" },
   // 1 mês
-  { monthsBefore: 1, phase: "1 mês antes", title: "Cobrar confirmação (RSVP) dos pendentes" },
+  { monthsBefore: 1, phase: "1 mês antes", title: "Cobrar confirmação de presença dos pendentes" },
   { monthsBefore: 1, phase: "1 mês antes", title: "Montar o mapa de mesas" },
   { monthsBefore: 1, phase: "1 mês antes", title: "Fechar o cronograma do grande dia com o cerimonial" },
   // 15 dias

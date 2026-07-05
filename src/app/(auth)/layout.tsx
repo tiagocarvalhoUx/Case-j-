@@ -4,7 +4,7 @@ import { LuxeEyebrow, LuxeTitle } from "@/components/luxe/ui";
 
 const highlights = [
   { icon: Gift, text: "Lista de presentes que vira dinheiro na sua conta" },
-  { icon: Users, text: "Convidados e RSVP organizados sem planilhas" },
+  { icon: Users, text: "Convidados e confirmações de presença sem planilhas" },
   { icon: Check, text: "Site do casamento no ar em minutos" },
 ];
 

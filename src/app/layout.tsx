@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     template: "%s · Case-já",
   },
   description:
-    "Case-já é a plataforma completa para casais planejarem o casamento: site personalizado, lista de presentes em dinheiro, cotas de lua de mel, RSVP e gestão de convidados — tudo em um só lugar.",
+    "Case-já é a plataforma completa para casais planejarem o casamento: site personalizado, lista de presentes em dinheiro, cotas de lua de mel, confirmação de presença e gestão de convidados — tudo em um só lugar.",
   keywords: [
     "casamento",
     "lista de presentes",
