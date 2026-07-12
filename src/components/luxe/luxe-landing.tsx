@@ -299,7 +299,15 @@ export function LuxeLanding() {
           <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
             <div className="relative overflow-hidden rounded-[18px]" data-reveal>
               <img id="about-img" src="/background/wedding-4.jpg" alt="Casamento planejado pela Case-já" className="aspect-[4/5] w-full rounded-[18px] object-cover" />
-              <div className="pointer-events-none absolute inset-0 rounded-[18px] ring-1 ring-inset ring-luxe-gold/20" />
+              {/* Moldura dupla dourada (igual à galeria) */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 rounded-[18px]"
+                style={{
+                  boxShadow:
+                    "inset 0 0 0 1px rgba(212,175,55,0.55), inset 0 0 0 6px #050505, inset 0 0 0 7px rgba(212,175,55,0.35)",
+                }}
+              />
             </div>
             <div data-reveal>
               <LuxeEyebrow>Sobre nós</LuxeEyebrow>
