@@ -58,19 +58,23 @@ const services = [
 ];
 
 const portfolio = [
-  { src: "/background/hero-luxe.jpg", tall: true },
-  { src: "/background/wedding-8.jpg", tall: true },
-  { src: "/background/wedding-1.jpg", tall: false },
-  { src: "/background/wedding-2.jpg", tall: false },
-  { src: "/background/wedding-4.jpg", tall: false },
-  { src: "/background/wedding-3.jpg", tall: false },
-  { src: "/background/wedding-6.avif", tall: false },
+  "/background/wedding-1.jpg",
+  "/background/wedding-8.jpg",
+  "/background/wedding-3.jpg",
+  "/background/wedding-6.avif",
+  "/background/wedding-5.avif",
+  "/background/wedding-2.jpg",
+  "/background/wedding-4.jpg",
+  "/background/hero-luxe.jpg",
 ];
 
 const testimonials = [
   { quote: "Cada detalhe foi impecável. Recebemos os presentes direto na conta e vivemos um dia de conto de fadas.", author: "Marina & Rafael" },
   { quote: "Sofisticação e tranquilidade do início ao fim. Nossos convidados não param de elogiar.", author: "Beatriz & André" },
   { quote: "A lista de presentes em cotas foi genial. Realizamos a lua de mel dos sonhos.", author: "Camila & Lucas" },
+  { quote: "Montamos o site em uma tarde e ficou lindo — simples e elegante do jeito que sonhamos.", author: "Fernanda & Diego" },
+  { quote: "As confirmações pelo WhatsApp facilitaram demais a organização dos convidados.", author: "Juliana & Marcos" },
+  { quote: "Tudo em um lugar só: convidados, presentes e cronograma. Salvou nosso planejamento.", author: "Patrícia & Bruno" },
 ];
 
 function NavList({
@@ -357,31 +361,23 @@ export function LuxeLanding() {
                 Momentos que viraram eternidade.
               </h2>
             </div>
-            <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-3">
-              {portfolio.map((item, i) => (
+            <div className="mt-14 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-4">
+              {portfolio.map((src, i) => (
                 <button
-                  key={item.src}
+                  key={src}
                   type="button"
                   data-img-reveal
                   onClick={() => setLightbox(i)}
-                  aria-label={`Ampliar foto ${i + 1} do portfólio`}
-                  className={cn(
-                    "group relative cursor-zoom-in overflow-hidden rounded-[14px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-luxe-gold",
-                    item.tall && "md:row-span-2",
-                    i === 0 && "col-span-2 md:col-span-1"
-                  )}
+                  aria-label={`Ampliar foto ${i + 1} da galeria`}
+                  className="group relative aspect-[4/3] cursor-zoom-in overflow-hidden rounded-[14px] border border-luxe-gold/40 shadow-[0_10px_40px_rgba(0,0,0,0.35)] transition-all duration-300 hover:border-luxe-gold/70 hover:shadow-[0_0_38px_rgba(212,175,55,0.18)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-luxe-gold"
                 >
                   <img
-                    src={item.src}
+                    src={src}
                     alt="Casamento Case-já"
                     loading="lazy"
-                    className={cn(
-                      "h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
-                      item.tall ? "aspect-[3/4] md:aspect-auto md:h-full" : "aspect-square"
-                    )}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-luxe-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="pointer-events-none absolute inset-0 rounded-[14px] ring-1 ring-inset ring-luxe-gold/15" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-luxe-black/35 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 </button>
               ))}
             </div>
@@ -426,16 +422,22 @@ export function LuxeLanding() {
                 O que os casais dizem.
               </h2>
             </div>
-            <div className="mt-14 grid gap-5 lg:grid-cols-3">
-              {testimonials.map((t) => (
-                <div key={t.author} data-reveal className="rounded-[18px] border border-luxe-gold/12 bg-luxe-card/70 p-8">
-                  <Quote size={26} className="text-luxe-gold/50" />
-                  <p className="mt-4 font-serif-luxe text-lg italic leading-relaxed text-luxe-cream/90">
-                    “{t.quote}”
-                  </p>
-                  <p className="mt-5 text-[11px] uppercase tracking-[0.25em] text-luxe-gold">{t.author}</p>
-                </div>
-              ))}
+            <div className="mt-14 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_7%,#000_93%,transparent)]">
+              <div data-marquee className="flex w-max gap-5 will-change-transform">
+                {[...testimonials, ...testimonials].map((t, i) => (
+                  <div
+                    key={i}
+                    aria-hidden={i >= testimonials.length}
+                    className="w-[300px] shrink-0 rounded-[18px] border border-luxe-gold/20 bg-luxe-card/70 p-8 sm:w-[360px]"
+                  >
+                    <Quote size={26} className="text-luxe-gold/50" />
+                    <p className="mt-4 font-serif-luxe text-lg italic leading-relaxed text-luxe-cream/90">
+                      “{t.quote}”
+                    </p>
+                    <p className="mt-5 text-[11px] uppercase tracking-[0.25em] text-luxe-gold">{t.author}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -525,7 +527,7 @@ export function LuxeLanding() {
 
       {/* Lightbox do portfólio */}
       <GalleryLightbox
-        images={portfolio.map((p) => p.src)}
+        images={portfolio}
         index={lightbox}
         onClose={() => setLightbox(null)}
         onNavigate={setLightbox}

@@ -133,6 +133,21 @@ export function useLandingMotion() {
               0
             );
         });
+
+        // ---- Carrossel de depoimentos (marquee) ----
+        // Movido por GSAP (transform via rAF) — assim roda mesmo com o CSS de
+        // prefers-reduced-motion, que zera apenas animações/transições CSS.
+        // A faixa tem 2 cópias; -50% = uma cópia → loop perfeito.
+        gsap.utils.toArray("[data-marquee]").forEach((track: HTMLElement) => {
+          const loop = gsap.to(track, {
+            xPercent: -50,
+            ease: "none",
+            duration: 45,
+            repeat: -1,
+          });
+          track.addEventListener("mouseenter", () => loop.pause());
+          track.addEventListener("mouseleave", () => loop.play());
+        });
       });
 
       // A intro trava o scroll; ao entrar, recalcula posições do ScrollTrigger.
