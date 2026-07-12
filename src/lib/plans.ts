@@ -116,14 +116,14 @@ export const PLANS: Record<PlanKey, Plan> = {
       guests: null,
       photos: null,
       themes: "all",
-      customDomain: true,
+      // Domínio próprio ainda não implementado — ver roadmap (nível A: subdomínio).
+      customDomain: false,
       removeBranding: true,
     },
     perks: [
       "Tudo do plano Essencial, e mais:",
       "Galeria de fotos ilimitada",
-      "Domínio próprio (seunome.com.br)",
-      "Marca “feito com Case-já” removida do site",
+      "Site 100% de vocês (marca “Case-já” removida)",
       "A menor taxa de presente (2,99%)",
       "Suporte por WhatsApp dedicado",
     ],

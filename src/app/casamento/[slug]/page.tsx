@@ -7,6 +7,7 @@ import { LuxeOrnament } from "@/components/luxe/ui";
 import { RsvpForm } from "./rsvp-form";
 import { WeddingGallery } from "./wedding-gallery";
 import { getTheme } from "@/lib/themes";
+import { getPlan } from "@/lib/plans";
 import { cn } from "@/lib/utils";
 import type { Gift as GiftRow, Wedding } from "@/lib/supabase/types";
 
@@ -85,6 +86,9 @@ export default async function PublicWeddingPage({
   ]);
   const gifts = (giftsData ?? []) as GiftRow[];
   const photos = photosData ?? [];
+
+  // Premium remove a marca "Feito com Case-já" do rodapé.
+  const removeBranding = getPlan(wedding).limits.removeBranding;
 
   const dateLabel = formatDate(wedding.wedding_date);
   const countdown = daysUntil(wedding.wedding_date);
@@ -309,21 +313,23 @@ export default async function PublicWeddingPage({
         </div>
       </section>
 
-      {/* RODAPÉ */}
-      <footer
-        className={cn("border-t py-10 text-center", light ? "border-black/10" : "border-luxe-gold/10")}
-      >
-        <Link
-          href="/"
-          className={cn(
-            "inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] transition-colors",
-            light ? "text-[#6b6257] hover:text-[#9a7325]" : "text-luxe-muted hover:text-luxe-gold"
-          )}
+      {/* RODAPÉ — a marca "Feito com Case-já" é ocultada no plano Premium. */}
+      {!removeBranding && (
+        <footer
+          className={cn("border-t py-10 text-center", light ? "border-black/10" : "border-luxe-gold/10")}
         >
-          <img src="/luxe/logo-casaja.png" alt="" className="h-6 w-auto opacity-80" />
-          Feito com Case-já
-        </Link>
-      </footer>
+          <Link
+            href="/"
+            className={cn(
+              "inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] transition-colors",
+              light ? "text-[#6b6257] hover:text-[#9a7325]" : "text-luxe-muted hover:text-luxe-gold"
+            )}
+          >
+            <img src="/luxe/logo-casaja.png" alt="" className="h-6 w-auto opacity-80" />
+            Feito com Case-já
+          </Link>
+        </footer>
+      )}
     </div>
   );
 }
