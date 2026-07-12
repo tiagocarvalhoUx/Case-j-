@@ -29,6 +29,7 @@ import { PlansGrid } from "@/components/luxe/plans-grid";
 import { CinematicIntro, REPLAY_EVENT } from "@/components/luxe/cinematic-intro";
 import { useLandingMotion } from "@/components/luxe/use-landing-motion";
 import { HeroViewfinder } from "@/components/luxe/hero-viewfinder";
+import { HeroVideo } from "@/components/luxe/hero-video";
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -188,12 +189,7 @@ export function LuxeLanding() {
         {/* ===== PRIMEIRA TELA: HERO + STATS ===== */}
         <div className="flex min-h-screen flex-col">
           <section id="inicio" className="relative flex flex-1 flex-col overflow-hidden scroll-mt-20">
-            <img
-              id="hero-bg"
-              src="/background/hero-luxe.jpg"
-              alt="Noiva em salão de festas luxuoso"
-              className="absolute inset-y-0 right-0 h-full w-full object-cover object-center lg:w-[66%]"
-            />
+            <HeroVideo className="absolute inset-y-0 right-0 h-full w-full object-cover object-center lg:w-[66%]" />
             <div className="absolute inset-0 bg-gradient-to-r from-luxe-black from-15% via-luxe-black/70 via-45% to-transparent to-75%" />
             <div className="absolute inset-0 bg-luxe-black/12" />
             {/* gradiente inferior forte no mobile para legibilidade */}
