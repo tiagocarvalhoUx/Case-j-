@@ -25,6 +25,7 @@ import {
 import { ReelModal } from "@/components/luxe/reel-modal";
 import { GalleryLightbox } from "@/components/luxe/gallery-lightbox";
 import { PlansGrid } from "@/components/luxe/plans-grid";
+import { CinematicIntro } from "@/components/luxe/cinematic-intro";
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -137,6 +138,9 @@ export function LuxeLanding() {
 
   return (
     <div className="relative flex bg-luxe-black font-sans text-luxe-cream">
+      {/* ---------- Abertura cinematográfica (uma vez por sessão) ---------- */}
+      <CinematicIntro />
+
       {/* ---------- Sidebar (desktop, fixa) ---------- */}
       <aside className="sticky top-0 z-20 hidden h-screen w-60 shrink-0 flex-col justify-between border-r border-luxe-gold/10 bg-luxe-black px-8 py-9 lg:flex">
         <div>
