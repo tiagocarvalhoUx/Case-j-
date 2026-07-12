@@ -14,6 +14,7 @@ import {
   Quote,
   Mail,
   Phone,
+  RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -25,7 +26,8 @@ import {
 import { ReelModal } from "@/components/luxe/reel-modal";
 import { GalleryLightbox } from "@/components/luxe/gallery-lightbox";
 import { PlansGrid } from "@/components/luxe/plans-grid";
-import { CinematicIntro } from "@/components/luxe/cinematic-intro";
+import { CinematicIntro, REPLAY_EVENT } from "@/components/luxe/cinematic-intro";
+import { useLandingMotion } from "@/components/luxe/use-landing-motion";
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -40,10 +42,10 @@ const navItems = [
 ];
 
 const stats = [
-  { value: "12", l1: "ANOS", l2: "DE EXPERIÊNCIA" },
-  { value: "320+", l1: "CASAMENTOS", l2: "REALIZADOS" },
-  { value: "25", l1: "DESTINOS", l2: "EXCLUSIVOS" },
-  { value: "98%", l1: "CLIENTES", l2: "SATISFEITOS" },
+  { num: 12, suffix: "", l1: "ANOS", l2: "DE EXPERIÊNCIA" },
+  { num: 320, suffix: "+", l1: "CASAMENTOS", l2: "REALIZADOS" },
+  { num: 25, suffix: "", l1: "DESTINOS", l2: "EXCLUSIVOS" },
+  { num: 98, suffix: "%", l1: "CLIENTES", l2: "SATISFEITOS" },
 ];
 
 const services = [
@@ -114,6 +116,7 @@ function NavList({
 }
 
 export function LuxeLanding() {
+  useLandingMotion();
   const [open, setOpen] = useState(false);
   const [reelOpen, setReelOpen] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
@@ -185,6 +188,7 @@ export function LuxeLanding() {
         <div className="flex min-h-screen flex-col">
           <section id="inicio" className="relative flex flex-1 flex-col overflow-hidden scroll-mt-20">
             <img
+              id="hero-bg"
               src="/background/hero-luxe.jpg"
               alt="Noiva em salão de festas luxuoso"
               className="absolute inset-y-0 right-0 h-full w-full object-cover object-center lg:w-[66%]"
@@ -269,8 +273,15 @@ export function LuxeLanding() {
           <div className="relative z-10 border-t border-luxe-gold/15 bg-gradient-to-b from-luxe-emerald-3 to-[#041d17]">
             <div className="grid grid-cols-2 divide-x divide-y divide-luxe-gold/12 lg:grid-cols-4 lg:divide-y-0">
               {stats.map((s) => (
-                <div key={s.value} className="flex flex-col items-center px-6 py-9 text-center lg:py-11">
-                  <span className="font-serif-luxe text-4xl font-light text-luxe-gold lg:text-[2.9rem]">{s.value}</span>
+                <div key={s.l1} className="flex flex-col items-center px-6 py-9 text-center lg:py-11">
+                  <span
+                    data-count={s.num}
+                    data-suffix={s.suffix}
+                    className="font-serif-luxe text-4xl font-light text-luxe-gold lg:text-[2.9rem]"
+                  >
+                    {s.num}
+                    {s.suffix}
+                  </span>
                   <span className="mt-3 font-serif-luxe text-xs tracking-[0.3em] text-luxe-cream/90">{s.l1}</span>
                   <span className="font-serif-luxe text-xs tracking-[0.3em] text-luxe-cream/65">{s.l2}</span>
                   <LuxeOrnament className="mt-4" />
@@ -283,11 +294,11 @@ export function LuxeLanding() {
         {/* ===== SOBRE ===== */}
         <section id="sobre" className="scroll-mt-20 px-7 py-24 sm:px-12 lg:px-20 lg:py-32">
           <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
-            <div className="relative">
-              <img src="/background/wedding-4.jpg" alt="Casamento planejado pela Case-já" className="aspect-[4/5] w-full rounded-[18px] object-cover" />
+            <div className="relative overflow-hidden rounded-[18px]" data-reveal>
+              <img id="about-img" src="/background/wedding-4.jpg" alt="Casamento planejado pela Case-já" className="aspect-[4/5] w-full rounded-[18px] object-cover" />
               <div className="pointer-events-none absolute inset-0 rounded-[18px] ring-1 ring-inset ring-luxe-gold/20" />
             </div>
-            <div>
+            <div data-reveal>
               <LuxeEyebrow>Sobre nós</LuxeEyebrow>
               <h2 className="mt-6 font-serif-luxe text-4xl font-light leading-tight text-luxe-cream sm:text-5xl">
                 Requinte e emoção em <span className="text-luxe-gold">cada detalhe</span>.
@@ -313,7 +324,7 @@ export function LuxeLanding() {
         {/* ===== SERVIÇOS ===== */}
         <section id="servicos" className="scroll-mt-20 border-t border-luxe-gold/10 bg-luxe-panel px-7 py-24 sm:px-12 lg:px-20 lg:py-32">
           <div className="mx-auto max-w-6xl">
-            <div className="max-w-2xl">
+            <div className="max-w-2xl" data-reveal>
               <LuxeEyebrow>Serviços</LuxeEyebrow>
               <h2 className="mt-6 font-serif-luxe text-4xl font-light text-luxe-cream sm:text-5xl">
                 Uma experiência completa, do sim ao adeus.
@@ -321,7 +332,7 @@ export function LuxeLanding() {
             </div>
             <div className="mt-14 grid gap-5 sm:grid-cols-2">
               {services.map((s) => (
-                <div key={s.title} className="group flex gap-5 rounded-[18px] border border-luxe-gold/12 bg-luxe-card/70 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-luxe-gold/25 hover:shadow-[0_0_40px_rgba(212,175,55,0.08)]">
+                <div key={s.title} data-reveal className="group flex gap-5 rounded-[18px] border border-luxe-gold/12 bg-luxe-card/70 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-luxe-gold/25 hover:shadow-[0_0_40px_rgba(212,175,55,0.08)]">
                   <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-luxe-gold/25 text-luxe-gold transition-colors group-hover:bg-luxe-gold group-hover:text-luxe-black">
                     <s.icon size={22} strokeWidth={1.5} />
                   </span>
@@ -338,7 +349,7 @@ export function LuxeLanding() {
         {/* ===== PORTFÓLIO ===== */}
         <section id="portfolio" className="scroll-mt-20 px-7 py-24 sm:px-12 lg:px-20 lg:py-32">
           <div className="mx-auto max-w-6xl">
-            <div className="text-center">
+            <div className="text-center" data-reveal>
               <div className="flex justify-center">
                 <LuxeEyebrow>Portfólio</LuxeEyebrow>
               </div>
@@ -379,7 +390,7 @@ export function LuxeLanding() {
         {/* ===== PLANOS ===== */}
         <section id="planos" className="scroll-mt-20 px-7 py-24 sm:px-12 lg:px-20 lg:py-32">
           <div className="mx-auto max-w-6xl">
-            <div className="text-center">
+            <div className="text-center" data-reveal>
               <div className="flex justify-center">
                 <LuxeEyebrow>Planos & preços</LuxeEyebrow>
               </div>
@@ -406,7 +417,7 @@ export function LuxeLanding() {
         {/* ===== DEPOIMENTOS ===== */}
         <section id="depoimentos" className="scroll-mt-20 border-t border-luxe-gold/10 bg-luxe-panel px-7 py-24 sm:px-12 lg:px-20 lg:py-32">
           <div className="mx-auto max-w-6xl">
-            <div className="text-center">
+            <div className="text-center" data-reveal>
               <div className="flex justify-center">
                 <LuxeEyebrow>Depoimentos</LuxeEyebrow>
               </div>
@@ -416,7 +427,7 @@ export function LuxeLanding() {
             </div>
             <div className="mt-14 grid gap-5 lg:grid-cols-3">
               {testimonials.map((t) => (
-                <div key={t.author} className="rounded-[18px] border border-luxe-gold/12 bg-luxe-card/70 p-8">
+                <div key={t.author} data-reveal className="rounded-[18px] border border-luxe-gold/12 bg-luxe-card/70 p-8">
                   <Quote size={26} className="text-luxe-gold/50" />
                   <p className="mt-4 font-serif-luxe text-lg italic leading-relaxed text-luxe-cream/90">
                     “{t.quote}”
@@ -430,9 +441,9 @@ export function LuxeLanding() {
 
         {/* ===== CONTATO ===== */}
         <section id="contato" className="relative scroll-mt-20 overflow-hidden px-7 py-28 sm:px-12 lg:px-20 lg:py-36">
-          <img src="/background/wedding-1.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <img id="cta-bg" src="/background/wedding-1.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
           <div className="absolute inset-0 bg-luxe-black/85" />
-          <div className="relative mx-auto max-w-2xl text-center">
+          <div className="relative mx-auto max-w-2xl text-center" data-reveal>
             <div className="flex justify-center">
               <LuxeOrnament className="w-24" />
             </div>
@@ -471,6 +482,13 @@ export function LuxeLanding() {
         <footer className="border-t border-luxe-gold/10 bg-luxe-black px-7 py-10 sm:px-12 lg:px-20">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
             <img src="/luxe/logo-casaja.png" alt="Case-já" className="w-16" />
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event(REPLAY_EVENT))}
+              className="inline-flex items-center gap-2 rounded-full border border-luxe-gold/35 px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-luxe-gold transition-colors hover:bg-luxe-gold hover:text-luxe-black"
+            >
+              <RotateCcw size={13} strokeWidth={1.5} /> Rever intro
+            </button>
             <p className="text-[11px] uppercase tracking-[0.2em] text-luxe-muted/70">
               © {new Date().getFullYear()} Case-já · Todos os direitos reservados
             </p>

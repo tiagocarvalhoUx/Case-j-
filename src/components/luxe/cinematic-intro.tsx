@@ -1,30 +1,26 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * Abertura cinematográfica do Case-já.
  *
- * Uma "cortina" dourada/preta que revela a marca, e ao entrar sobe/desce
- * descortinando a landing. Feita com as boas práticas que uma intro exige:
- *  - respeita prefers-reduced-motion (pula tudo, sem travar scroll);
+ * Uma "cortina" dourada/preta que revela a marca e, ao entrar, sobe/desce
+ * descortinando a landing. Práticas aplicadas:
  *  - toca uma vez por sessão (sessionStorage) — não incomoda quem volta;
+ *  - pode ser revista a qualquer momento (evento `caseja:replay-intro`);
+ *  - avisa quando termina (evento `caseja:entered`) p/ recalcular o scroll;
  *  - é pulável (botão, ESC, clique) e sempre libera o scroll ao final;
- *  - acessível: dialog modal, foco no CTA, foco movido para o conteúdo ao fim;
- *  - GSAP carregado sob demanda (code-split), com fallback sem animação.
+ *  - acessível: dialog modal, foco no CTA e movido ao conteúdo no fim;
+ *  - GSAP carregado sob demanda (code-split), com fallback estático.
+ *
+ * Observação: por ser a vitrine de marketing, a abertura toca mesmo com
+ * "menos movimento" ligado no SO (decisão de produto, não acessibilidade).
  */
 
 const SEEN_KEY = "caseja_intro_seen";
-
-// useLayoutEffect no cliente, useEffect no servidor (evita warning de SSR).
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+export const REPLAY_EVENT = "caseja:replay-intro";
+export const ENTERED_EVENT = "caseja:entered";
 
 export function CinematicIntro() {
   const [visible, setVisible] = useState(true);
@@ -36,26 +32,26 @@ export function CinematicIntro() {
   const botRef = useRef<HTMLDivElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
 
-  // Guardas para não disparar duas vezes / após desmontar.
   const enteringRef = useRef(false);
-  const reducedRef = useRef(false);
   const prevOverflowRef = useRef<string>("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const gsapRef = useRef<any>(null);
 
-  const unlockScroll = useCallback(() => {
-    document.body.style.overflow = prevOverflowRef.current;
+  const lockScroll = useCallback(() => {
+    prevOverflowRef.current = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
   }, []);
 
   const finish = useCallback(() => {
-    unlockScroll();
+    document.body.style.overflow = prevOverflowRef.current;
     try {
       sessionStorage.setItem(SEEN_KEY, "1");
     } catch {
       /* sessionStorage indisponível — sem problema */
     }
     setVisible(false);
-    // Move o foco para o conteúdo (continuidade para teclado/leitores de tela).
+    window.dispatchEvent(new Event(ENTERED_EVENT));
+    // Move o foco para o conteúdo (continuidade p/ teclado e leitores de tela).
     requestAnimationFrame(() => {
       const main = document.querySelector("main");
       if (main) {
@@ -63,7 +59,7 @@ export function CinematicIntro() {
         (main as HTMLElement).focus({ preventScroll: true });
       }
     });
-  }, [unlockScroll]);
+  }, []);
 
   const enter = useCallback(() => {
     if (enteringRef.current) return;
@@ -82,10 +78,8 @@ export function CinematicIntro() {
       .to(botRef.current, { yPercent: 100, duration: 1.1, ease: "expo.inOut" }, "curtain");
   }, [finish]);
 
-  // Decide, antes da pintura, se pula a intro. Só pulamos de fato quando ela
-  // já foi vista nesta sessão. Com "menos movimento" (prefers-reduced-motion)
-  // a intro AINDA aparece — só troca a cortina deslizante por fade/instantâneo.
-  useIsoLayoutEffect(() => {
+  // Pula na 1ª pintura só se já foi vista nesta sessão; senão trava o scroll.
+  useEffect(() => {
     let seen = false;
     try {
       seen = sessionStorage.getItem(SEEN_KEY) === "1";
@@ -96,29 +90,30 @@ export function CinematicIntro() {
       setVisible(false);
       return;
     }
-    reducedRef.current = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    // Trava o scroll enquanto a cortina está no ar.
-    prevOverflowRef.current = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    lockScroll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Permite "Rever intro" a qualquer momento (botão do rodapé).
+  useEffect(() => {
+    const onReplay = () => {
+      try {
+        sessionStorage.removeItem(SEEN_KEY);
+      } catch {
+        /* ignore */
+      }
+      enteringRef.current = false;
+      gsapRef.current = null;
+      lockScroll();
+      setVisible(true);
+    };
+    window.addEventListener(REPLAY_EVENT, onReplay);
+    return () => window.removeEventListener(REPLAY_EVENT, onReplay);
+  }, [lockScroll]);
 
   // Carrega o GSAP e roda o reveal da marca.
   useEffect(() => {
     if (!visible) return;
-
-    // "Menos movimento": mostra a marca estática, sem carregar o GSAP.
-    if (reducedRef.current) {
-      if (innerRef.current) {
-        innerRef.current.style.opacity = "1";
-        innerRef.current.style.transform = "none";
-      }
-      if (lineRef.current) lineRef.current.style.width = "210px";
-      btnRef.current?.focus({ preventScroll: true });
-      return;
-    }
-
     let mounted = true;
 
     import("gsap")
@@ -128,6 +123,8 @@ export function CinematicIntro() {
         const gsap = (mod as any).gsap ?? (mod as any).default;
         gsapRef.current = gsap;
 
+        gsap.set([topRef.current, botRef.current], { yPercent: 0 });
+        gsap.set(overlayRef.current, { backgroundColor: "" });
         gsap.set(innerRef.current, { opacity: 0, y: 14 });
         gsap.set(lineRef.current, { width: 0 });
         gsap.to(innerRef.current, {
@@ -151,6 +148,7 @@ export function CinematicIntro() {
           innerRef.current.style.opacity = "1";
           innerRef.current.style.transform = "none";
         }
+        if (lineRef.current) lineRef.current.style.width = "210px";
       });
 
     return () => {
@@ -249,7 +247,7 @@ export function CinematicIntro() {
         </p>
       </div>
 
-      {/* Pular (acessibilidade / respeito ao tempo do usuário) */}
+      {/* Pular (respeito ao tempo do usuário) */}
       <button
         type="button"
         onClick={(e) => {
