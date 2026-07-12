@@ -38,6 +38,7 @@ export function CinematicIntro() {
 
   // Guardas para não disparar duas vezes / após desmontar.
   const enteringRef = useRef(false);
+  const reducedRef = useRef(false);
   const prevOverflowRef = useRef<string>("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const gsapRef = useRef<any>(null);
@@ -81,21 +82,23 @@ export function CinematicIntro() {
       .to(botRef.current, { yPercent: 100, duration: 1.1, ease: "expo.inOut" }, "curtain");
   }, [finish]);
 
-  // Decide, antes da pintura, se pula a intro (reduced-motion ou já vista).
+  // Decide, antes da pintura, se pula a intro. Só pulamos de fato quando ela
+  // já foi vista nesta sessão. Com "menos movimento" (prefers-reduced-motion)
+  // a intro AINDA aparece — só troca a cortina deslizante por fade/instantâneo.
   useIsoLayoutEffect(() => {
-    const reduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
     let seen = false;
     try {
       seen = sessionStorage.getItem(SEEN_KEY) === "1";
     } catch {
       /* ignore */
     }
-    if (reduced || seen) {
+    if (seen) {
       setVisible(false);
       return;
     }
+    reducedRef.current = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
     // Trava o scroll enquanto a cortina está no ar.
     prevOverflowRef.current = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -104,6 +107,18 @@ export function CinematicIntro() {
   // Carrega o GSAP e roda o reveal da marca.
   useEffect(() => {
     if (!visible) return;
+
+    // "Menos movimento": mostra a marca estática, sem carregar o GSAP.
+    if (reducedRef.current) {
+      if (innerRef.current) {
+        innerRef.current.style.opacity = "1";
+        innerRef.current.style.transform = "none";
+      }
+      if (lineRef.current) lineRef.current.style.width = "210px";
+      btnRef.current?.focus({ preventScroll: true });
+      return;
+    }
+
     let mounted = true;
 
     import("gsap")
