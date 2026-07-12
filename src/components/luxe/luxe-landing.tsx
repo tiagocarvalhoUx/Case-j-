@@ -58,14 +58,13 @@ const services = [
 ];
 
 const portfolio = [
-  "/background/wedding-1.jpg",
-  "/background/wedding-8.jpg",
-  "/background/wedding-3.jpg",
-  "/background/wedding-6.avif",
-  "/background/wedding-5.avif",
-  "/background/wedding-2.jpg",
-  "/background/wedding-4.jpg",
-  "/background/hero-luxe.jpg",
+  { src: "/background/hero-luxe.jpg", tall: true },
+  { src: "/background/wedding-8.jpg", tall: true },
+  { src: "/background/wedding-1.jpg", tall: false },
+  { src: "/background/wedding-2.jpg", tall: false },
+  { src: "/background/wedding-4.jpg", tall: false },
+  { src: "/background/wedding-3.jpg", tall: false },
+  { src: "/background/wedding-6.avif", tall: false },
 ];
 
 const testimonials = [
@@ -361,23 +360,31 @@ export function LuxeLanding() {
                 Momentos que viraram eternidade.
               </h2>
             </div>
-            <div className="mt-14 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-4">
-              {portfolio.map((src, i) => (
+            <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-3">
+              {portfolio.map((item, i) => (
                 <button
-                  key={src}
+                  key={item.src}
                   type="button"
                   data-img-reveal
                   onClick={() => setLightbox(i)}
-                  aria-label={`Ampliar foto ${i + 1} da galeria`}
-                  className="group relative aspect-[4/3] cursor-zoom-in overflow-hidden rounded-[14px] border border-luxe-gold/40 shadow-[0_10px_40px_rgba(0,0,0,0.35)] transition-all duration-300 hover:border-luxe-gold/70 hover:shadow-[0_0_38px_rgba(212,175,55,0.18)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-luxe-gold"
+                  aria-label={`Ampliar foto ${i + 1} do portfólio`}
+                  className={cn(
+                    "group relative cursor-zoom-in overflow-hidden rounded-[14px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-luxe-gold",
+                    item.tall && "md:row-span-2",
+                    i === 0 && "col-span-2 md:col-span-1"
+                  )}
                 >
                   <img
-                    src={src}
+                    src={item.src}
                     alt="Casamento Case-já"
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className={cn(
+                      "h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
+                      item.tall ? "aspect-[3/4] md:aspect-auto md:h-full" : "aspect-square"
+                    )}
                   />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-luxe-black/35 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-luxe-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="pointer-events-none absolute inset-0 rounded-[14px] ring-1 ring-inset ring-luxe-gold/15" />
                 </button>
               ))}
             </div>
@@ -527,7 +534,7 @@ export function LuxeLanding() {
 
       {/* Lightbox do portfólio */}
       <GalleryLightbox
-        images={portfolio}
+        images={portfolio.map((p) => p.src)}
         index={lightbox}
         onClose={() => setLightbox(null)}
         onNavigate={setLightbox}
