@@ -28,6 +28,7 @@ import { GalleryLightbox } from "@/components/luxe/gallery-lightbox";
 import { PlansGrid } from "@/components/luxe/plans-grid";
 import { CinematicIntro, REPLAY_EVENT } from "@/components/luxe/cinematic-intro";
 import { useLandingMotion } from "@/components/luxe/use-landing-motion";
+import { HeroViewfinder } from "@/components/luxe/hero-viewfinder";
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -198,6 +199,9 @@ export function LuxeLanding() {
             {/* gradiente inferior forte no mobile para legibilidade */}
             <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-luxe-black via-luxe-black/70 to-transparent lg:hidden" />
             <div className="absolute inset-x-0 bottom-0 hidden h-40 bg-gradient-to-t from-luxe-black/70 to-transparent lg:block" />
+
+            {/* Visor de câmera (apresentação estilo filmagem) */}
+            <HeroViewfinder />
 
             <div className="relative z-10 flex flex-1 flex-col justify-end px-6 pb-14 pt-28 sm:px-12 lg:max-w-[54%] lg:justify-center lg:px-16 lg:py-0">
               <div className="flex items-center gap-4 animate-luxe-in" style={{ animationDelay: "0.05s" }}>
