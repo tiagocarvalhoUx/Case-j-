@@ -384,7 +384,15 @@ export function LuxeLanding() {
                     )}
                   />
                   <div className="absolute inset-0 bg-luxe-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="pointer-events-none absolute inset-0 rounded-[14px] ring-1 ring-inset ring-luxe-gold/15" />
+                  {/* Moldura dupla dourada (linha externa · respiro escuro · linha interna) */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 rounded-[14px] transition-[box-shadow] duration-300"
+                    style={{
+                      boxShadow:
+                        "inset 0 0 0 1px rgba(212,175,55,0.55), inset 0 0 0 6px #050505, inset 0 0 0 7px rgba(212,175,55,0.35)",
+                    }}
+                  />
                 </button>
               ))}
             </div>
