@@ -99,6 +99,40 @@ export function useLandingMotion() {
               }),
           });
         });
+
+        // ---- Reveal "cinematográfico" de imagens (estilo agência) ----
+        // A imagem surge por baixo de uma máscara que abre de cima p/ baixo,
+        // enquanto faz um zoom lento assentando (1.3 → 1). Sem tocar no HTML:
+        // usamos clip-path (preserva o arredondado) e liberamos o transform no
+        // fim para o hover-zoom continuar funcionando.
+        gsap.utils.toArray("[data-img-reveal]").forEach((frame: HTMLElement) => {
+          const img = frame.querySelector("img") as HTMLElement | null;
+          gsap.set(frame, { clipPath: "inset(0% 0% 100% 0%)" });
+          if (img) gsap.set(img, { scale: 1.3, transformOrigin: "center center" });
+          gsap
+            .timeline({
+              scrollTrigger: { trigger: frame, start: "top 82%", once: true },
+            })
+            .to(
+              frame,
+              {
+                clipPath: "inset(0% 0% 0% 0%)",
+                duration: 1.0,
+                ease: "power4.inOut",
+              },
+              0
+            )
+            .to(
+              img,
+              {
+                scale: 1,
+                duration: 1.5,
+                ease: "power3.out",
+                onComplete: () => img && gsap.set(img, { clearProps: "transform" }),
+              },
+              0
+            );
+        });
       });
 
       // A intro trava o scroll; ao entrar, recalcula posições do ScrollTrigger.

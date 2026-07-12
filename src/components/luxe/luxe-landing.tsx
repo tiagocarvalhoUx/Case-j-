@@ -362,6 +362,7 @@ export function LuxeLanding() {
                 <button
                   key={item.src}
                   type="button"
+                  data-img-reveal
                   onClick={() => setLightbox(i)}
                   aria-label={`Ampliar foto ${i + 1} do portfólio`}
                   className={cn(
